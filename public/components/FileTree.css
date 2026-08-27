@@ -7,6 +7,9 @@
   border: 1px solid #1a1a1a;
   box-shadow: 8px 8px #0003;
   padding: 14px 50px 14px 18px;
+
+  --file-tree-highlight-bg: #ffd54a14;
+  --file-tree-highlight-color: #ffd54a;
 }
 
 .file-tree {
@@ -42,10 +45,10 @@
     }
 
     &.highlight > summary {
-      background: #ffd54a14;
+      background: var(--file-tree-highlight-bg);
 
       .label {
-        color: #ffd54a;
+        color: var(--file-tree-highlight-color, inherit);
         font-weight: 700;
       }
     }
@@ -70,10 +73,10 @@
     &:hover { background: #ffffff0d; }
 
     &.highlight {
-      background: #ffd54a14;
+      background: var(--file-tree-highlight-bg);
 
       .label {
-        color: #ffd54a;
+        color: var(--file-tree-highlight-color, inherit);
         font-weight: 700;
       }
     }
@@ -90,5 +93,11 @@
 
   .label {
     white-space: nowrap;
+  }
+
+  .info {
+    color: #888;
+    font-size: 0.85em;
+    margin-left: 6px;
   }
 }

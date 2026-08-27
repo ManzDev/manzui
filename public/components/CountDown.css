@@ -1,0 +1,10 @@
+.countdown {
+  font-weight: 600;
+  font-size: 21px;
+  color: #fff;
+  text-align: center;
+}
+
+.countdown.expired {
+  opacity: 0.6;
+}
