@@ -1,0 +1,4 @@
+- [ ] Estructura de carpetas (FileTree) -> Acordeón
+- [ ] Varios inputs para poner número de una contraseña (OTP)
+- [ ] Chained Select (hay que definir la estructura)
+- [ ] Mini-overlay siempre visible flotante y arrastrable (no me convence)
