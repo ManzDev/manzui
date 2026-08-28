@@ -5,6 +5,7 @@ class CountDown extends HTMLElement {
   #date;
   #interval;
   #remaining;
+  #prev = {};
 
   static get observedAttributes() {
     return ["date"];
@@ -47,9 +48,8 @@ class CountDown extends HTMLElement {
       clearInterval(this.#interval);
     }
 
-    const now = Date.now();
     const target = this.#date?.getTime() ?? Infinity;
-    this.#remaining = (target - now) / 1000;
+    this.#remaining = (target - Date.now()) / 1000;
 
     if (this.#remaining <= 0) {
       this.#emitEvent();
@@ -57,7 +57,7 @@ class CountDown extends HTMLElement {
     }
 
     this.#interval = setInterval(() => {
-      this.#remaining -= 1;
+      this.#remaining = (target - Date.now()) / 1000;
 
       if (this.#remaining <= 0) {
         clearInterval(this.#interval);
@@ -78,29 +78,85 @@ class CountDown extends HTMLElement {
     }));
   }
 
-  #formatTime(seconds) {
-    const total = Math.ceil(seconds);
+  #getTimeComponents() {
+    const total = Math.max(0, Math.ceil(this.#remaining));
     const days = Math.floor(total / 86400);
     const hours = Math.floor((total % 86400) / 3600);
     const minutes = Math.floor((total % 3600) / 60);
     const secs = total % 60;
+    return { days, hours, minutes, secs };
+  }
 
-    const parts = [];
-    if (days > 0) parts.push(`${days}d`);
-    if (hours > 0) parts.push(`${hours}h`);
-    if (minutes > 0) parts.push(`${minutes}m`);
-    parts.push(`${secs}s`);
+  #pad2(n) {
+    return String(n).padStart(2, "0").split("");
+  }
 
-    return parts.join(" ");
+  // value = nuevo dígito, prev = dígito anterior (para la animación de flip)
+  #digitCard(value, prev, flip) {
+    const cls = flip ? "digit flip" : "digit";
+    return /* html */`
+      <div class="${cls}">
+        <div class="top"><span>${value}</span></div>
+        <div class="bottom"><span>${prev}</span></div>
+        <div class="flip-top"><span>${prev}</span></div>
+        <div class="flip-bottom"><span>${value}</span></div>
+      </div>
+    `;
+  }
+
+  // Alinea los dígitos por la derecha (el menos significativo) para comparar
+  #unitCard(label, digits, prevDigits) {
+    const len = digits.length;
+    let html = "";
+    for (let i = 0; i < len; i++) {
+      const value = digits[i];
+      const pIdx = prevDigits.length - len + i;
+      const prev = pIdx >= 0 ? prevDigits[pIdx] : value;
+      const flip = prev !== value;
+      html += this.#digitCard(value, prev, flip);
+    }
+    return /* html */`
+      <div class="unit">
+        <div class="label">${label}</div>
+        <div class="digits">${html}</div>
+      </div>
+    `;
   }
 
   #render() {
     if (!this.#date || this.#remaining <= 0) {
-      this.#shadow.innerHTML = `<div class="countdown expired">Tiempo finalizado</div>`;
+      this.#shadow.innerHTML = `<div class="expired">Tiempo finalizado</div>`;
       return;
     }
 
-    this.#shadow.innerHTML = `<div class="countdown">${this.#formatTime(this.#remaining)}</div>`;
+    const t = this.#getTimeComponents();
+    const daysStr = String(t.days).split("");
+    const hoursStr = String(t.hours).padStart(2, "0").split("");
+    const minsStr = this.#pad2(t.minutes);
+    const secsStr = this.#pad2(t.secs);
+
+    const prev = this.#prev;
+    const nDays = prev.days ? prev.days.split("") : [];
+    const nHours = prev.hours ? prev.hours.split("") : [];
+    const nMin = prev.minutes ? prev.minutes.split("") : [];
+    const nSec = prev.seconds ? prev.seconds.split("") : [];
+
+    this.#prev = {
+      days: daysStr.join(""),
+      hours: hoursStr.join(""),
+      minutes: minsStr.join(""),
+      seconds: secsStr.join(""),
+    };
+
+    const units = [];
+    if (t.days > 0) {
+      units.push(this.#unitCard("DÍAS", daysStr, nDays));
+    }
+    units.push(this.#unitCard("HORAS", hoursStr, nHours));
+    units.push(this.#unitCard("MIN", minsStr, nMin));
+    units.push(this.#unitCard("SEG", secsStr, nSec));
+
+    this.#shadow.innerHTML = `<div class="flip-clock">${units.join("")}</div>`;
   }
 }
 
