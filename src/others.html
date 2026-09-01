@@ -1,0 +1,105 @@
+<style>
+  file-tree::part(highlight) {
+    --file-tree-highlight-bg: #6b07a11e;
+    --file-tree-highlight-color: #c238a9;
+  }
+
+
+  comparative-chart::part(selected) {
+    --color-selected: steelblue;
+    color: #888;
+  }
+</style>
+
+<!--
+ <script type="module" src="/components/InputOTP.js"></script>
+
+  <input-otp separator="-" type="alphanumeric">
+    <input>
+    <input>
+    <input>
+  </input-otp>
+
+
+<script type="module" src="/components/ComparativeChart.js"></script>
+
+  <comparative-chart label="retained heap per instance" unit="KB" sort>
+    <data selected value="82.0">z.object(), 10 keys</data>
+    <data value="17.5">z.union([...])</data>
+    <data value="16.7">z.string().min(1)</data>
+    <data value="26.4">z.record(...)</data>
+    <data selected value="12.6">z.string().optional()</data>
+    <data value="41.2">z.array(z.string())</data>
+    <data value="7.5">z.string()</data>
+    <data value="4.4">z.number()</data>
+  </comparative-chart>
+  -->
+
+<!-- Option 1: HTML Mode -->
+<!-- script type="module" src="/components/FileTree.js"></script -->
+<!-- Option 2: JS Mode -->
+<!-- script type="module">
+    import "/components/CommandViewer.js";
+  </script -->
+<!-- script type="module" src="/components/FileTree.js"></script>
+<command-viewer label="Instalar Git en Debian/Ubuntu" prompt="$">
+    <nav label="Actualizamos los repositorios">
+      <code>sudo apt update</code>
+      <samp>Hit:1 http://deb.debian.org/debian bookworm InRelease
+        Get:2 http://deb.debian.org/debian bookworm-updates InRelease [52.1 kB]
+        Reading package lists... Done
+        Building dependency tree... Done</samp>
+    </nav>
+    <nav label="Instalamos git en nuestro sistema">
+      <code>sudo apt install -y git</code>
+      <samp>Reading package lists... Done
+        The following NEW packages will be installed:
+          git git-man
+        0 upgraded, 2 newly installed, 0 to remove
+        Setting up git (1:2.39.2-1.1) ...
+        Processing triggers for man-db (2.11.2-2) ...</samp>
+    </nav>
+  </command-viewer -->
+
+<!-- h1>Test</h1>
+
+  <script type="module" src="/components/CountDown.js"></script>
+  <count-down date="2026-08-30T23:39:00.000"></count-down>
+
+  <script>
+    document.addEventListener("countdown-end", () => {
+      console.log("LLegó al final");
+    });
+  </script>
+
+  <script type="module" src="/components/ImageSliderCompare.js"></script>
+  <image-slider-compare>
+    <img src="manz.png" alt="Manz">
+    <img src="moai.png" alt="Moai">
+  </image-slider-compare>
+
+-->
+
+
+<!-- file-tree sort>
+    <pre style="color:white">
+    manzui/
+    ├── node_modules/
+    ├── package.json
+    ├── pnpm-lock.yaml
+    ├── public
+    │   ├── components
+    │   │   ├── ImageMaskCompare.css
+    │   │   ├── ImageMaskCompare.js
+    │   │   ├── ImageSliderCompare.css (← 24K)
+    │   │   ├── ImageSliderCompare.js (← 21K)
+    │   │   ├── ImageValuesViewer.css
+    │   │   └── ImageValuesViewer.js
+    │   ├── manz.png (← Esto es una información)
+    │   └── moai.png* (← Esto es otra info)
+    ├── README.md
+    ├── src
+    │   └── index.html
+    └── vite.config.js
+    </pre>
+  </file-tree-->

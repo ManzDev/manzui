@@ -14,33 +14,20 @@
       color: #fff;
     }
 
-    file-tree::part(highlight) {
-      --file-tree-highlight-bg: #6b07a11e;
-      --file-tree-highlight-color: #c238a9;
+    input-otp {
+      --otp-bg: white;
+      --otp-color: black;
+      --otp-size: 32px;
+      --otp-gap: 4px;
+      --otp-radius: 0;
     }
   </style>
 </head>
 
 <body>
 
-  <h1>Test</h1>
-
-  <script type="module" src="/components/CountDown.js"></script>
-  <count-down date="2026-08-30T23:39:00.000"></count-down>
-
-  <script>
-    document.addEventListener("countdown-end", () => {
-      console.log("LLegó al final");
-    });
-  </script>
-
-  <script type="module" src="/components/ImageSliderCompare.js"></script>
-  <image-slider-compare>
-    <img src="manz.png" alt="Manz">
-    <img src="moai.png" alt="Moai">
-  </image-slider-compare>
-
   <script type="module" src="/components/FileTree.js"></script>
+
   <file-tree sort>
     manzui/
     ├── node_modules/
@@ -61,6 +48,7 @@
     │   └── index.html
     └── vite.config.js
   </file-tree>
+
 
 </body>
 
