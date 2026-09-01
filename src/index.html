@@ -1,55 +1,481 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>manzui — Librería de WebComponents</title>
   <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg-card: #1a1a1a;
+      --bg-elevated: #222;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --muted: #9aa0a6;
+      --accent: #6b07a1;
+      --accent-2: #c238a9;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      background: #151515;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    h1 {
+    /* Header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+      background: rgba(15,15,15,.9);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: .9rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: .95rem;
+      letter-spacing: .04em;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: #fff;
+    }
+    .brand p {
+      margin: 0;
+      font-size: .75rem;
+      color: var(--muted);
+      line-height: 1;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .header-actions a {
+      font-size: .8rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: .35rem .6rem;
+      border-radius: 999px;
+    }
+    .header-actions a:hover { color: var(--text); border-color: #3a3a3a; }
+
+    /* Tabs */
+    .tabs-bar {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      display: flex;
+      gap: .25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      padding: .85rem .9rem;
+      font-size: .9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: -1px;
+      transition: color .15s, border-color .15s, background .15s;
+      border-radius: 6px 6px 0 0;
+    }
+    .tab[aria-selected="true"] {
+      color: #fff;
+      border-color: var(--accent-2);
+      background: linear-gradient(to bottom, rgba(194,56,169,.08), transparent);
+    }
+    .tab:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+    .tab small { font-weight: 400; color: var(--muted); margin-left: .35rem; }
+
+    /* Main */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 2rem;
+    }
+    .panel[hidden] { display: none !important; }
+
+    /* Catalog toolbar */
+    .catalog-toolbar {
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: .6rem .8rem .6rem 2.2rem;
+      border-radius: 10px;
+      font-size: .9rem;
+      outline: none;
+    }
+    .search-wrap input:focus { border-color: #3a3a3a; }
+    .search-wrap span {
+      position: absolute;
+      left: .7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .catalog-count {
+      font-size: .85rem;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .catalog-hint {
+      font-size: .8rem;
+      color: var(--muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: .35rem .6rem;
+      border-radius: 999px;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+      transition: border-color .15s;
+    }
+    .card:hover { border-color: #333; }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: .75rem;
+      align-items: flex-start;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .card-tag {
+      font-weight: 400;
+      color: var(--accent-2);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .85em;
+    }
+    .card-desc {
+      margin: .25rem 0 0;
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .badge {
+      font-size: .7rem;
+      background: #222;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: .2rem .45rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .card-meta {
+      font-size: .78rem;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+      align-items: center;
+    }
+    .meta-label { font-weight: 600; color: #b8bcc0; }
+    .attr {
+      background: #222;
+      border: 1px solid var(--border);
+      padding: .15rem .35rem;
+      border-radius: 6px;
+      font-family: ui-monospace, monospace;
+      font-size: .75rem;
+      color: #d6d6d6;
+    }
+    .card-files {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .card-files a {
+      font-size: .75rem;
+      color: #8ec8ff;
+      text-decoration: none;
+      background: #1e1e1e;
+      border: 1px solid var(--border);
+      padding: .25rem .5rem;
+      border-radius: 999px;
+    }
+    .card-files a:hover { border-color: #3a3a3a; color: #b8ddff; }
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+    }
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #222;
+      color: var(--text);
+      padding: .4rem .65rem;
+      border-radius: 8px;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn:hover { background: #2a2a2a; }
+    .btn-ghost {
+      background: transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .btn-sm { padding: .35rem .6rem; font-size: .78rem; }
+    .btn.copied { border-color: #2e7d32; color: #a5d6a7; }
+    .code-wrap {
+      background: #0f0f0f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .code {
+      margin: 0;
+      padding: .75rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .78rem;
+      line-height: 1.5;
+      color: #d6d6d6;
+      white-space: pre;
+    }
+    .preview {
+      border: 1px dashed #333;
+      border-radius: 10px;
+      padding: .75rem;
+      background: #121212;
+    }
+    .preview-label {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+    .preview-stage {
+      background: #151515;
+      border-radius: 8px;
+      padding: .5rem;
+      min-height: 40px;
+    }
+    .preview-stage comparative-chart::part(selected) { --color-selected: steelblue; color: #888; }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--muted);
+      padding: 2rem;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+    }
+
+    /* Sandbox panel */
+    .sandbox-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .9rem;
+    }
+    .sandbox-head h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .sandbox-head p {
+      margin: .15rem 0 0;
+      color: var(--muted);
+      font-size: .85rem;
+      max-width: 60ch;
+    }
+    .sandbox-actions {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .sandbox-frame {
+      width: 100%;
+      height: min(78vh, 900px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #151515;
+      overflow: hidden;
+    }
+    .sandbox-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #151515;
+      display: block;
+    }
+    .sandbox-note {
+      margin-top: .75rem;
+      font-size: .8rem;
+      color: var(--muted);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: .6rem .75rem;
+      border-radius: 10px;
+    }
+    .sandbox-note code {
+      background: #222;
+      padding: .15rem .3rem;
+      border-radius: 6px;
+      font-size: .85em;
       color: #fff;
     }
 
-    input-otp {
-      --otp-bg: white;
-      --otp-color: black;
-      --otp-size: 32px;
-      --otp-gap: 4px;
-      --otp-radius: 0;
+    /* InputOTP global example in catalog previews */
+    input-otp { --otp-bg: white; --otp-color: black; --otp-size: 32px; --otp-gap: 4px; --otp-radius: 8px; }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem;
+      color: var(--muted);
+      font-size: .75rem;
+      border-top: 1px solid var(--border);
+      width: 100%;
     }
   </style>
 </head>
-
 <body>
 
-  <script type="module" src="/components/FileTree.js"></script>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#">
+        <div class="brand-mark">mz</div>
+        <div>
+          <h1>manzui</h1>
+          <p>Librería de WebComponents</p>
+        </div>
+      </a>
+      <div class="header-actions">
+        <a href="./sandbox.html" target="_blank" rel="noopener">Abrir sandbox ↗</a>
+        <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener" title="Docs">Docs</a>
+      </div>
+    </div>
+    <div class="tabs-bar" role="tablist" aria-label="Secciones">
+      <button class="tab" id="tab-catalogo" role="tab" aria-selected="true" aria-controls="panel-catalogo" tabindex="0">Catálogo <small>8</small></button>
+      <button class="tab" id="tab-sandbox" role="tab" aria-selected="false" aria-controls="panel-sandbox" tabindex="-1">Sandbox <small>live</small></button>
+    </div>
+  </header>
 
-  <file-tree sort>
-    manzui/
-    ├── node_modules/
-    ├── package.json
-    ├── pnpm-lock.yaml
-    ├── public
-    │   ├── components
-    │   │   ├── ImageMaskCompare.css
-    │   │   ├── ImageMaskCompare.js
-    │   │   ├── ImageSliderCompare.css (← 24K)
-    │   │   ├── ImageSliderCompare.js (← 21K)
-    │   │   ├── ImageValuesViewer.css
-    │   │   └── ImageValuesViewer.js
-    │   ├── manz.png (← Esto es una información)
-    │   └── moai.png* (← Esto es otra info)
-    ├── README.md
-    ├── src
-    │   └── index.html
-    └── vite.config.js
-  </file-tree>
+  <main>
+    <!-- Panel Catálogo -->
+    <section id="panel-catalogo" class="panel" role="tabpanel" aria-labelledby="tab-catalogo">
+      <div class="catalog-toolbar">
+        <label class="search-wrap" aria-label="Buscar componente">
+          <span aria-hidden="true">⌕</span>
+          <input id="catalog-search" type="search" placeholder="Buscar por nombre, tag o descripción…" autocomplete="off">
+        </label>
+        <span id="catalog-count" class="catalog-count">8 componentes</span>
+        <span class="catalog-hint">📘 Cada componente tiene su <code>.md</code> en <code>src/docs/</code></span>
+      </div>
+      <div id="catalog-grid" class="grid" aria-live="polite"></div>
+    </section>
 
+    <!-- Panel Sandbox -->
+    <section id="panel-sandbox" class="panel" role="tabpanel" aria-labelledby="tab-sandbox" hidden>
+      <div class="sandbox-head">
+        <div>
+          <h2>Sandbox</h2>
+          <p>Contenido de <code>sandbox.html</code> embebido. Edita <code>src/sandbox.html</code> en tu editor y guarda — Vite hace HMR automático.</p>
+        </div>
+        <div class="sandbox-actions">
+          <button id="btn-reload-sandbox" class="btn" type="button">⟳ Recargar</button>
+          <a id="btn-open-sandbox" class="btn btn-ghost" href="./sandbox.html" target="_blank" rel="noopener">Abrir en pestaña ↗</a>
+        </div>
+      </div>
+      <div class="sandbox-frame">
+        <iframe
+          title="Sandbox manzui"
+          data-src="./sandbox.html"
+          src="./sandbox.html"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        ></iframe>
+      </div>
+      <div class="sandbox-note">
+        Tip: para probar un componente nuevo, añade en <code>sandbox.html</code> un <code>&lt;script type="module" src="/components/TuComponente.js"&gt;&lt;/script&gt;</code> y su tag HTML. Los archivos están en <code>public/components/</code> y se sirven como <code>/components/*</code>.
+      </div>
+    </section>
+  </main>
 
+  <footer>
+    manzui — 8 webcomponents vanilla · <code>public/components/</code> → <code>/components/*.js</code> · Catálogo generado desde <code>src/data/components.js</code> + <code>src/docs/*.md</code>
+  </footer>
+
+  <script type="module" src="./js/app.js"></script>
 </body>
-
 </html>
