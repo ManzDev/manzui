@@ -6,7 +6,7 @@ description: Comparador de máscaras con sliders de recorte de resultado y opaci
 <script type="module" src="/components/ImageMaskCompare.js"></script>
 
 <image-mask-compare
-  path="/manzui/"
+  path="https://manzdev.github.io/manzui/"
   base="manz.png"
   mask="moai.png"
   result="manz.png">
