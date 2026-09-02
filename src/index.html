@@ -4,21 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ManzUI — Librería de WebComponents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Science+Gothic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #08080f;
       --bg-card: #13131f;
       --bg-card-hover: #1a1a2e;
       --border: rgba(255, 42, 157, 0.15);
-      --border-hover: rgba(255, 42, 157, 0.4);
+      --border-hover: rgba(255, 42, 157, 0.35);
       --pink: #ff2a9d;
-      --pink-glow: 0 0 20px rgba(255, 42, 157, 0.5), 0 0 40px rgba(255, 42, 157, 0.2);
+      --pink-glow: 0 0 20px rgba(255, 42, 157, 0.45);
       --cyan: #00f0ff;
-      --cyan-glow: 0 0 20px rgba(0, 240, 255, 0.5), 0 0 40px rgba(0, 240, 255, 0.2);
+      --cyan-glow: 0 0 18px rgba(0, 240, 255, 0.45);
       --purple: #8a2be2;
-      --text: #e0e0ff;
+      --text: #e6e6ff;
       --muted: #8890b8;
-      --radius: 16px;
+      --radius: 18px;
+      --font-header: "Science Gothic", system-ui, -apple-system, sans-serif;
+      --font-body: "Jost", system-ui, -apple-system, sans-serif;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -26,12 +31,11 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--font-body);
       line-height: 1.6;
       min-height: 100vh;
       overflow-x: hidden;
     }
-    /* Synthwave grid background */
     body::before {
       content: "";
       position: fixed;
@@ -39,12 +43,13 @@
       background:
         linear-gradient(rgba(255,42,157,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px),
-        radial-gradient(ellipse at 50% 0%, rgba(138,43,226,0.15), transparent 60%),
-        radial-gradient(ellipse at 80% 100%, rgba(255,42,157,0.08), transparent 50%);
+        radial-gradient(ellipse at 50% 0%, rgba(138,43,226,0.14), transparent 60%),
+        radial-gradient(ellipse at 85% 100%, rgba(255,42,157,0.07), transparent 50%);
       background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
       pointer-events: none;
       z-index: -1;
     }
+    h1, h2, h3 { font-family: var(--font-header); }
     a { color: var(--cyan); text-decoration: none; }
     a:hover { text-shadow: var(--cyan-glow); }
 
@@ -54,7 +59,7 @@
       top: 0;
       z-index: 20;
       backdrop-filter: blur(12px);
-      background: rgba(8, 8, 15, 0.85);
+      background: rgba(8,8,15,0.88);
       border-bottom: 1px solid var(--border);
     }
     .header-inner {
@@ -83,16 +88,11 @@
       font-weight: 900;
       color: #fff;
       font-size: 0.95rem;
-      letter-spacing: 0.04em;
       box-shadow: var(--pink-glow);
+      font-family: var(--font-header);
     }
-    .brand b { font-size: 1.05rem; letter-spacing: 0.02em; }
-    .brand span { font-size: 0.7rem; color: var(--muted); display: block; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; }
-    .nav {
-      display: flex;
-      gap: 0.4rem;
-      align-items: center;
-    }
+    .brand b { font-size: 1.05rem; letter-spacing: -0.02em; font-family: var(--font-header); font-weight: 800; }
+    .brand span { font-size: 0.68rem; color: var(--muted); display: block; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-body); }
     .nav a {
       padding: 0.45rem 0.9rem;
       border-radius: 999px;
@@ -100,78 +100,52 @@
       font-weight: 600;
       color: var(--muted);
       border: 1px solid transparent;
-      transition: all 0.2s;
     }
-    .nav a:hover, .nav a.active {
-      color: var(--text);
-      border-color: var(--border);
-      background: rgba(255,42,157,0.06);
-    }
-    .nav a.cta {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: #fff;
-      border-color: transparent;
-      box-shadow: 0 4px 20px rgba(255,42,157,0.3);
-    }
-    .nav a.cta:hover { box-shadow: var(--pink-glow); transform: translateY(-1px); }
+    .nav a:hover { color: var(--text); border-color: var(--border); background: rgba(255,42,157,0.06); }
 
     /* Hero */
     .hero {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2.2rem 1rem 1.5rem;
+      padding: 2.2rem 1rem 1.4rem;
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 2rem;
       align-items: center;
     }
     @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
-    .hero-copy h1 {
+    .hero h1 {
       margin: 0;
-      font-size: clamp(2rem, 5vw, 3.1rem);
-      line-height: 0.9;
-      font-weight: 900;
+      font-size: clamp(2.1rem, 5vw, 3.2rem);
+      line-height: 0.92;
+      font-weight: 800;
       letter-spacing: -0.03em;
     }
-    .hero-copy h1 span {
-      background: linear-gradient(90deg, var(--pink) 0%, #ff7ac4 35%, var(--cyan) 100%);
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--pink) 0%, #ff7ac4 40%, var(--cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 0 12px rgba(255,42,157,0.3));
+      filter: drop-shadow(0 0 10px rgba(255,42,157,0.35));
     }
-    .hero-copy p {
+    .hero p {
       margin: 0.9rem 0 0;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 1.02rem;
       max-width: 52ch;
     }
-    .hero-copy p strong { color: var(--text); font-weight: 600; }
-    .hero-stats {
-      display: flex;
-      gap: 1.2rem;
-      margin-top: 1.1rem;
-      flex-wrap: wrap;
-    }
-    .stat {
-      display: flex;
-      align-items: baseline;
-      gap: 0.35rem;
-    }
-    .stat b { font-size: 1.4rem; color: var(--cyan); text-shadow: var(--cyan-glow); }
-    .stat span { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .hero-actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1.4rem;
-      flex-wrap: wrap;
-    }
+    .hero p strong { color: var(--text); font-weight: 600; }
+    .hero-stats { display: flex; gap: 1.2rem; margin-top: 1rem; flex-wrap: wrap; }
+    .stat { display: flex; align-items: baseline; gap: 0.3rem; }
+    .stat b { font-size: 1.35rem; color: var(--cyan); text-shadow: var(--cyan-glow); font-family: var(--font-header); }
+    .stat span { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .hero-actions { display: flex; gap: 0.7rem; margin-top: 1.3rem; flex-wrap: wrap; }
     .btn {
       appearance: none;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text);
-      padding: 0.65rem 1.1rem;
+      padding: 0.62rem 1.05rem;
       border-radius: 999px;
       font-size: 0.88rem;
       font-weight: 700;
@@ -181,56 +155,40 @@
       align-items: center;
       gap: 0.35rem;
       text-decoration: none;
+      font-family: var(--font-body);
     }
     .btn:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-1px); }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      border-color: transparent;
-      color: #fff;
-      box-shadow: 0 8px 30px rgba(255,42,157,0.35);
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--pink), var(--purple)); border-color: transparent; color: #fff; box-shadow: 0 8px 28px rgba(255,42,157,0.32); }
     .btn-primary:hover { box-shadow: var(--pink-glow); }
-    .btn-ghost { background: transparent; }
-    .hero-visual {
-      position: relative;
-      display: grid;
-      place-items: center;
-    }
+    .hero-visual { position: relative; display: grid; place-items: center; }
     .hero-img-wrap {
       position: relative;
       width: min(100%, 520px);
       border-radius: 20px;
       overflow: hidden;
-      border: 1px solid rgba(255,42,157,0.25);
-      box-shadow: 0 0 0 1px rgba(0,240,255,0.15), 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,42,157,0.15);
+      border: 1px solid rgba(255,42,157,0.22);
+      box-shadow: 0 0 0 1px rgba(0,240,255,0.12), 0 20px 60px rgba(0,0,0,0.55), 0 0 36px rgba(255,42,157,0.12);
       background: #000;
     }
     .hero-img-wrap::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, transparent 55%, rgba(8,8,15,0.85) 100%), linear-gradient(90deg, rgba(255,42,157,0.08), rgba(0,240,255,0.08));
+      background: linear-gradient(180deg, transparent 56%, rgba(8,8,15,0.88) 100%), linear-gradient(90deg, rgba(255,42,157,0.06), rgba(0,240,255,0.06));
       pointer-events: none;
     }
-    .hero-img-wrap img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      object-position: center top;
-    }
+    .hero-img-wrap img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; object-position: center top; }
     .hero-badge {
       position: absolute;
       bottom: -12px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(19,19,31,0.9);
+      background: rgba(19,19,31,0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border);
-      padding: 0.4rem 0.8rem;
+      padding: 0.38rem 0.8rem;
       border-radius: 999px;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 700;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -239,7 +197,7 @@
       white-space: nowrap;
     }
 
-    /* Sections */
+    /* Main */
     main { max-width: 1100px; margin: 0 auto; padding: 0 1rem 2.5rem; }
     .section-head {
       display: flex;
@@ -247,13 +205,13 @@
       justify-content: space-between;
       gap: 1rem;
       flex-wrap: wrap;
-      margin: 2rem 0 1.1rem;
-      padding-top: 0.5rem;
+      margin: 2.1rem 0 1rem;
+      padding-top: 0.6rem;
       border-top: 1px solid var(--border);
     }
     .section-head h2 {
       margin: 0;
-      font-size: 1.35rem;
+      font-size: 1.45rem;
       font-weight: 800;
       letter-spacing: -0.02em;
     }
@@ -263,10 +221,8 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .section-head p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.85rem; max-width: 55ch; }
-    .section-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .section-head p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.85rem; max-width: 55ch; }
 
-    /* Catalog */
     .catalog-toolbar {
       display: flex;
       gap: 0.7rem;
@@ -284,29 +240,31 @@
       border-radius: 999px;
       font-size: 0.9rem;
       outline: none;
+      font-family: var(--font-body);
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .search-wrap input:focus { border-color: rgba(0,240,255,0.35); box-shadow: var(--cyan-glow); }
+    .search-wrap input:focus { border-color: rgba(0,240,255,0.32); box-shadow: var(--cyan-glow); }
     .search-wrap span { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: var(--muted); }
     .catalog-count { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
-    .catalog-hint { font-size: 0.75rem; color: var(--muted); border: 1px dashed var(--border); padding: 0.3rem 0.6rem; border-radius: 999px; background: rgba(255,255,255,0.02); }
+    .catalog-hint { font-size: 0.73rem; color: var(--muted); border: 1px dashed var(--border); padding: 0.3rem 0.6rem; border-radius: 999px; background: rgba(255,255,255,0.02); }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 1rem;
     }
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 1rem;
+      padding: 1.05rem;
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.55rem;
       transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
       position: relative;
       overflow: hidden;
+      min-height: 148px;
     }
     .card::before {
       content: "";
@@ -314,36 +272,105 @@
       top: 0; left: 0; right: 0;
       height: 2px;
       background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
-      opacity: 0.6;
+      opacity: 0.65;
     }
-    .card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.4), 0 0 20px rgba(255,42,157,0.08); }
-    .card-head { display: flex; justify-content: space-between; gap: 0.75rem; align-items: flex-start; }
-    .card-title { margin: 0; font-size: 1rem; font-weight: 800; color: #fff; }
-    .card-tag { font-weight: 500; color: var(--cyan); font-family: ui-monospace, monospace; font-size: 0.82em; }
-    .card-desc { margin: 0.2rem 0 0; font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
-    .badge { font-size: 0.68rem; background: rgba(0,240,255,0.08); border: 1px solid rgba(0,240,255,0.2); color: var(--cyan); padding: 0.2rem 0.45rem; border-radius: 999px; white-space: nowrap; }
-    .card-files { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-    .card-files a { font-size: 0.72rem; color: var(--muted); text-decoration: none; background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 0.2rem 0.5rem; border-radius: 999px; }
-    .card-files a:hover { color: var(--text); border-color: var(--border-hover); }
-    .card-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .btn-sm { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
-    .btn.copied { border-color: #1db954; color: #a7f3d0; }
-    .code-wrap { background: #0a0a12; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .code { margin: 0; padding: 0.75rem; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.76rem; line-height: 1.5; color: #cbd5e1; white-space: pre; }
-    .preview { border: 1px dashed rgba(0,240,255,0.2); border-radius: 12px; padding: 0.75rem; background: #0e0e1a; }
-    .preview-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.5rem; }
-    .preview-stage { background: #151520; border-radius: 10px; padding: 0.6rem; min-height: 44px; border: 1px solid var(--border); }
+    .card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.42), 0 0 18px rgba(255,42,157,0.08); }
+    .card-name {
+      margin: 0;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+      font-family: var(--font-header);
+    }
+    .card-tag {
+      font-family: ui-monospace, monospace;
+      font-size: 0.78rem;
+      color: var(--cyan);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .card-desc {
+      margin: 0;
+      font-size: 0.86rem;
+      color: var(--muted);
+      line-height: 1.5;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 0.2rem;
+    }
+    .card-meta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,42,157,0.08);
+      color: var(--pink);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 0 0 auto;
+    }
+    .icon-btn:hover { background: linear-gradient(135deg, var(--pink), var(--purple)); color: #fff; border-color: transparent; box-shadow: var(--pink-glow); transform: translateY(-1px); }
+    .icon-btn svg { width: 18px; height: 18px; }
     .empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; border: 1px dashed var(--border); border-radius: var(--radius); background: var(--bg-card); }
 
-    /* Sandbox */
-    .sandbox-frame { width: 100%; height: min(78vh, 860px); border: 1px solid var(--border); border-radius: var(--radius); background: #0a0a12; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-    .sandbox-frame iframe { width: 100%; height: 100%; border: 0; background: #151515; display: block; }
-    .sandbox-note { margin-top: 0.75rem; font-size: 0.8rem; color: var(--muted); background: var(--bg-card); border: 1px solid var(--border); padding: 0.6rem 0.75rem; border-radius: 12px; }
-    .sandbox-note code { background: rgba(255,42,157,0.1); padding: 0.15rem 0.35rem; border-radius: 6px; font-size: 0.85em; color: #fff; border: 1px solid var(--border); }
+    /* Detail view */
+    .detail[hidden] { display: none !important; }
+    .detail {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 16px 50px rgba(0,0,0,0.45);
+    }
+    .detail-header {
+      padding: 1.1rem 1.1rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 1rem;
+      background: linear-gradient(180deg, rgba(255,42,157,0.06), transparent);
+    }
+    .detail-header h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+    .detail-header h3 span { color: var(--cyan); font-family: ui-monospace, monospace; font-size: 0.78em; font-weight: 600; }
+    .detail-header p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.88rem; max-width: 70ch; }
+    .detail-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .detail-body { padding: 1rem; display: grid; gap: 1rem; }
+    .detail-preview {
+      background: #0e0e1a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.9rem;
+    }
+    .detail-preview-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.6rem; font-family: var(--font-header); }
+    .detail-stage { background: #151520; border-radius: 12px; padding: 0.8rem; border: 1px solid var(--border); min-height: 80px; }
+    .detail-stage comparative-chart::part(selected) { --color-selected: steelblue; color: #888; }
+    .code-wrap { background: #0a0a12; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .code-head { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-head span { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-family: var(--font-header); }
+    .code { margin: 0; padding: 0.85rem; overflow-x: auto; font-family: ui-monospace, monospace; font-size: 0.78rem; line-height: 1.6; color: #cbd5e1; white-space: pre; }
 
     input-otp { --otp-bg: white; --otp-color: black; --otp-size: 32px; --otp-gap: 4px; --otp-radius: 8px; }
     footer { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem; color: var(--muted); font-size: 0.75rem; border-top: 1px solid var(--border); width: 100%; text-align: center; }
-    footer a { color: var(--cyan); }
   </style>
 </head>
 <body>
@@ -356,10 +383,8 @@
           <span>WebComponents • synthwave</span>
         </div>
       </a>
-      <nav class="nav" aria-label="Secciones">
+      <nav class="nav" aria-label="Navegación">
         <a href="#catalogo">Catálogo</a>
-        <a href="#sandbox">Sandbox</a>
-        <a class="cta" href="./sandbox.html" target="_blank" rel="noopener">Abrir sandbox ↗</a>
       </nav>
     </div>
   </header>
@@ -367,7 +392,7 @@
   <section class="hero" aria-label="Portada">
     <div class="hero-copy">
       <h1><span>ManzUI</span><br>Librería de<br>WebComponents</h1>
-      <p><strong>8 componentes vanilla</strong> sin dependencias. Copia el HTML del <code>.md</code> de <code>public/components/</code> y úsalo directo. Estilo oscuro, accesible y con acentos <em style="color:var(--pink); font-style:normal; text-shadow: var(--pink-glow)">synthwave</em>.</p>
+      <p><strong>8 componentes vanilla</strong> sin dependencias. Cada tarjeta muestra nombre, tag y descripción. Pulsa acceder para ver el HTML del <code>.md</code> de <code>public/components/</code>.</p>
       <div class="hero-stats">
         <div class="stat"><b>8</b> <span>componentes</span></div>
         <div class="stat"><b>0</b> <span>dependencias</span></div>
@@ -375,7 +400,6 @@
       </div>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#catalogo">Explorar catálogo ↓</a>
-        <a class="btn btn-ghost" href="#sandbox">Probar en sandbox →</a>
       </div>
     </div>
     <div class="hero-visual" aria-hidden="true">
@@ -391,11 +415,9 @@
       <div class="section-head">
         <div>
           <h2 id="catalogo-title">Catálogo <em>de componentes</em></h2>
-          <p>Contenido generado desde los <code>.md</code> de <code>public/components/</code>. Cada tarjeta muestra <code>title</code>, <code>description</code> y el HTML de uso.</p>
+          <p>Basado en los <code>.md</code> de <code>public/components/</code>.</p>
         </div>
-        <div class="section-actions">
-          <span id="catalog-count" class="catalog-count">cargando…</span>
-        </div>
+        <div class="catalog-count" id="catalog-count">cargando…</div>
       </div>
 
       <div class="catalog-toolbar">
@@ -403,40 +425,42 @@
           <span aria-hidden="true">⌕</span>
           <input id="catalog-search" type="search" placeholder="Buscar por nombre, tag o descripción…" autocomplete="off">
         </label>
-        <span class="catalog-hint">📘 8 × <code>.md</code> en <code>/components/*.md</code></span>
+        <span class="catalog-hint">📘 8 × <code>/components/*.md</code></span>
       </div>
 
       <div id="catalog-grid" class="grid" aria-live="polite"></div>
       <div id="catalog-status" class="empty" hidden></div>
     </section>
 
-    <section id="sandbox" aria-labelledby="sandbox-title">
-      <div class="section-head">
+    <section id="detail" class="detail" hidden aria-live="polite">
+      <div class="detail-header">
         <div>
-          <h2 id="sandbox-title">Sandbox <em>live</em></h2>
-          <p>Edita <code>src/sandbox.html</code> y guarda — Vite hace HMR. Aquí ves el contenido embebido.</p>
+          <h3 id="detail-title"></h3>
+          <p id="detail-desc"></p>
         </div>
-        <div class="section-actions">
-          <button id="btn-reload-sandbox" class="btn btn-sm" type="button">⟳ Recargar</button>
-          <a class="btn btn-sm" href="./sandbox.html" target="_blank" rel="noopener">Abrir en pestaña ↗</a>
+        <div class="detail-actions">
+          <button id="detail-copy" class="btn btn-sm" type="button">Copiar HTML</button>
+          <button id="detail-back" class="btn btn-sm" type="button">← Volver</button>
         </div>
       </div>
-      <div class="sandbox-frame">
-        <iframe
-          title="Sandbox ManzUI"
-          src="./sandbox.html"
-          loading="lazy"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-        ></iframe>
-      </div>
-      <div class="sandbox-note">
-        Tip: añade <code>&lt;script type="module" src="/components/TuComponente.js"&gt;&lt;/script&gt;</code> + su tag en <code>sandbox.html</code>. Los ficheros viven en <code>public/components/</code> y se sirven como <code>/components/*</code>.
+      <div class="detail-body">
+        <div class="detail-preview">
+          <div class="detail-preview-label">Preview</div>
+          <div id="detail-stage" class="detail-stage"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-head">
+            <span>HTML del .md</span>
+            <a id="detail-md-link" href="#" target="_blank" rel="noopener" style="font-size:0.75rem; color:var(--muted)">Abrir .md ↗</a>
+          </div>
+          <pre class="code"><code id="detail-code" class="language-html"></code></pre>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    manzui — 8 webcomponents vanilla · <code>public/components/*.md</code> como fuente de verdad · <a href="https://github.com/anomalyco/opencode" target="_blank" rel="noopener">opencode</a> • synthwave accents
+    manzui — 8 webcomponents vanilla · <code>public/components/*.md</code> como fuente de verdad · synthwave accents
   </footer>
 
   <script type="module" src="./js/app.js"></script>

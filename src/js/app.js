@@ -1,4 +1,4 @@
-// Catálogo generado desde public/components/*.md (title + description + HTML de uso)
+// Catálogo desde public/components/*.md — cards simplificadas + vista detalle
 const FILES = [
   "CommandViewer",
   "ComparativeChart",
@@ -21,44 +21,24 @@ const TAG_MAP = {
   InputOTP: "input-otp",
 };
 
-const ATTRS_MAP = {
-  CommandViewer: ["label", "prompt", "start"],
-  ComparativeChart: ["label", "unit", "sort"],
-  CountDown: ["date"],
-  FileTree: ["sort"],
-  ImageMaskCompare: ["path", "base", "mask", "result"],
-  ImageSliderCompare: ["pos", "zoom"],
-  ImageValuesViewer: ["path", "ref", "prefix", "min", "max"],
-  InputOTP: ["length", "type", "separator", "placeholder", "value", "disabled", "invalid", "mask", "autofocus"],
-};
-
 const grid = document.getElementById("catalog-grid");
 const search = document.getElementById("catalog-search");
 const countEl = document.getElementById("catalog-count");
-const statusEl = document.getElementById("catalog-status");
+const catalogSection = document.getElementById("catalogo");
+const detail = document.getElementById("detail");
+const detailTitle = document.getElementById("detail-title");
+const detailDesc = document.getElementById("detail-desc");
+const detailCode = document.getElementById("detail-code");
+const detailStage = document.getElementById("detail-stage");
+const detailCopy = document.getElementById("detail-copy");
+const detailBack = document.getElementById("detail-back");
+const detailMdLink = document.getElementById("detail-md-link");
 
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const prev = btn.textContent;
-    btn.textContent = "¡Copiado!";
-    btn.classList.add("copied");
-    setTimeout(() => { btn.textContent = prev; btn.classList.remove("copied"); }, 1400);
-  }).catch(() => {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
-  });
-}
-
 function parseMd(raw) {
-  // Frontmatter between first two ---, rest is HTML content
   const m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
   if (!m) return { title: "", description: "", body: raw.trim() };
   const fm = m[1];
@@ -69,6 +49,7 @@ function parseMd(raw) {
 }
 
 let all = [];
+let currentDetail = null;
 
 async function loadAll() {
   const results = await Promise.all(FILES.map(async (name) => {
@@ -81,41 +62,14 @@ async function loadAll() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const raw = await res.text();
       const { title, description, body } = parseMd(raw);
-      // body is HTML snippet (includes <script> + component)
-      // For code display, use body as is
-      // For preview, we need to strip script src that will be loaded via import
-      return {
-        name,
-        tag,
-        title: title || name,
-        description: description || "",
-        js,
-        css,
-        doc,
-        attrs: ATTRS_MAP[name] || [],
-        rawBody: body,
-        example: body, // keep for preview injection (will be used after import)
-      };
+      return { name, tag, title: title || name, description: description || "", js, css, doc, rawBody: body };
     } catch (e) {
-      return {
-        name,
-        tag,
-        title: name,
-        description: `No se pudo cargar ${doc}: ${e.message}`,
-        js,
-        css,
-        doc,
-        attrs: ATTRS_MAP[name] || [],
-        rawBody: "",
-        example: "",
-        error: true,
-      };
+      return { name, tag, title: name, description: `No se pudo cargar ${doc}: ${e.message}`, js, css, doc, rawBody: "", error: true };
     }
   }));
-
-  // keep defined order
   all = results;
   render("");
+  handleHash();
 }
 
 function render(filter = "") {
@@ -126,7 +80,6 @@ function render(filter = "") {
     c.title.toLowerCase().includes(q) ||
     c.description.toLowerCase().includes(q)
   );
-
   if (countEl) countEl.textContent = `${filtered.length} componente${filtered.length !== 1 ? "s" : ""}`;
 
   if (filtered.length === 0) {
@@ -134,107 +87,120 @@ function render(filter = "") {
     return;
   }
 
-  grid.innerHTML = filtered.map((c, i) => {
-    const attrs = c.attrs.map(a => `<code class="attr">${escapeHtml(a)}</code>`).join(" ");
-    const safeBody = escapeHtml(c.rawBody || "");
+  grid.innerHTML = filtered.map(c => {
     const safeTitle = escapeHtml(c.title);
     const safeDesc = escapeHtml(c.description);
     const safeTag = escapeHtml(c.tag);
     return /* html */`
-      <article class="card" data-tag="${safeTag}">
-        <header class="card-head">
-          <div>
-            <h3 class="card-title">${safeTitle} <span class="card-tag">&lt;${safeTag}&gt;</span></h3>
-            <p class="card-desc">${safeDesc}</p>
-          </div>
-          <span class="badge">${i + 1}/${filtered.length}</span>
-        </header>
-        <div class="card-meta"><span class="meta-label">Atributos:</span> ${attrs || "<span class='muted'>—</span>"}</div>
-        <div class="card-files">
-          <a href="${c.js}" target="_blank" rel="noopener">📄 ${c.js}</a>
-          <a href="${c.css}" target="_blank" rel="noopener">🎨 ${c.css}</a>
-          <a href="${c.doc}" target="_blank" rel="noopener">📘 .md</a>
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-sm btn-copy" data-copy="${encodeURIComponent(c.rawBody)}" type="button">Copiar HTML</button>
-          <button class="btn btn-sm btn-preview" type="button" data-tag="${safeTag}">Ver preview</button>
-          <a class="btn btn-sm btn-ghost" href="${c.doc}" target="_blank" rel="noopener">Abrir .md</a>
-        </div>
-        <div class="code-wrap"><pre class="code"><code class="language-html">${safeBody}</code></pre></div>
-        <div class="preview" hidden>
-          <div class="preview-label">Preview</div>
-          <div class="preview-stage"></div>
+      <article class="card">
+        <h3 class="card-name">${safeTitle}</h3>
+        <div class="card-tag">&lt;${safeTag}&gt;</div>
+        <p class="card-desc">${safeDesc}</p>
+        <div class="card-foot">
+          <span class="card-meta">${escapeHtml(c.name)} • .md</span>
+          <button class="icon-btn" type="button" aria-label="Abrir ${safeTitle}" data-open="${c.name}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/><path d="M13 12H5"/><path d="M19 12a7 7 0 0 0-7-7"/></svg>
+          </button>
         </div>
       </article>
     `;
   }).join("");
 
-  grid.querySelectorAll(".btn-copy").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const raw = decodeURIComponent(btn.dataset.copy);
-      copyText(raw, btn);
-    });
+  grid.querySelectorAll("[data-open]").forEach(btn => {
+    btn.addEventListener("click", () => openDetail(btn.dataset.open));
   });
+}
 
-  grid.querySelectorAll(".btn-preview").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const card = btn.closest(".card");
-      const preview = card.querySelector(".preview");
-      const stage = card.querySelector(".preview-stage");
-      const tag = btn.dataset.tag;
-      const comp = all.find(x => x.tag === tag);
-      const isHidden = preview.hidden;
-      if (isHidden) {
-        try {
-          await import(/* @vite-ignore */ comp.js);
-        } catch (e) {
-          stage.innerHTML = `<div class="notice">No se pudo cargar <code>${escapeHtml(comp.js)}</code>: ${escapeHtml(String(e.message || e))}</div>`;
-        }
-        // Inject HTML without <script type="module" src> to avoid duplicate loads; keep style + component
-        // Remove script tags with src, keep inline scripts/styles and component
-        const withoutSrc = comp.example.replace(/<script[^>]*src[^>]*><\/script>\s*/gi, "");
-        stage.innerHTML = withoutSrc;
-        preview.hidden = false;
-        btn.textContent = "Ocultar preview";
-      } else {
-        preview.hidden = true;
-        stage.innerHTML = "";
-        btn.textContent = "Ver preview";
-      }
-    });
+async function openDetail(name) {
+  const comp = all.find(c => c.name === name);
+  if (!comp) return;
+  currentDetail = comp;
+
+  // Update hash without scrolling
+  history.pushState(null, "", `#component-${name}`);
+
+  // Fill detail
+  detailTitle.innerHTML = `${escapeHtml(comp.title)} <span>&lt;${escapeHtml(comp.tag)}&gt;</span>`;
+  detailDesc.textContent = comp.description;
+  detailCode.textContent = comp.rawBody;
+  detailMdLink.href = comp.doc;
+
+  // Show detail, hide grid toolbar? Keep toolbar but hide grid? Simpler hide grid and show detail
+  grid.hidden = true;
+  document.querySelector(".catalog-toolbar").hidden = true;
+  detail.hidden = false;
+  detail.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  // Render preview
+  detailStage.innerHTML = "";
+  try {
+    await import(/* @vite-ignore */ comp.js);
+  } catch (e) {
+    detailStage.innerHTML = `<div style="color:var(--muted); font-size:0.85rem">No se pudo cargar <code>${escapeHtml(comp.js)}</code>: ${escapeHtml(String(e.message || e))}</div>`;
+    return;
+  }
+  const withoutSrc = comp.rawBody.replace(/<script[^>]*src[^>]*><\/script>\s*/gi, "");
+  // Also remove outer script tags with src? Keep style and component
+  detailStage.innerHTML = withoutSrc;
+  // Execute inline scripts inside detailStage (if any) — they were stripped as text, need to re-create
+  // Extract inline script bodies from original rawBody and run them
+  const inlineScripts = [...comp.rawBody.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1].trim()).filter(Boolean);
+  inlineScripts.forEach(code => {
+    try {
+      // eslint-disable-next-line no-new-func
+      new Function(code)();
+    } catch {}
   });
+}
+
+function closeDetail() {
+  currentDetail = null;
+  detail.hidden = true;
+  grid.hidden = false;
+  document.querySelector(".catalog-toolbar").hidden = false;
+  detailStage.innerHTML = "";
+  history.pushState(null, "", "#catalogo");
+  document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
+}
+
+function handleHash() {
+  const h = location.hash;
+  const m = h.match(/^#component-(.+)$/);
+  if (m && all.length) {
+    const name = m[1];
+    if (FILES.includes(name)) openDetail(name);
+  }
 }
 
 if (search) search.addEventListener("input", (e) => render(e.target.value));
-
-// Sandbox reload
-const iframe = document.querySelector("#sandbox iframe");
-const btnReload = document.getElementById("btn-reload-sandbox");
-if (btnReload && iframe) {
-  btnReload.addEventListener("click", () => {
-    iframe.src = iframe.src;
-  });
-}
-
-// Init
-grid.innerHTML = `<div class="empty">Cargando componentes desde <code>public/components/*.md</code>…</div>`;
-loadAll().catch(err => {
-  if (statusEl) {
-    statusEl.hidden = false;
-    statusEl.textContent = `Error cargando catálogo: ${err.message}`;
+if (detailBack) detailBack.addEventListener("click", closeDetail);
+if (detailCopy) detailCopy.addEventListener("click", async () => {
+  if (!currentDetail) return;
+  const text = currentDetail.rawBody;
+  try {
+    await navigator.clipboard.writeText(text);
+    const prev = detailCopy.textContent;
+    detailCopy.textContent = "¡Copiado!";
+    setTimeout(() => detailCopy.textContent = prev, 1400);
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
   }
 });
 
-// Smooth nav highlight on scroll
-const navLinks = document.querySelectorAll(".nav a[href^='#']");
-if (navLinks.length) {
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(ent => {
-      if (ent.isIntersecting) {
-        const id = ent.target.id;
-        navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === `#${id}`));
-      }
-    });
-  }, { rootMargin: "-40% 0px -50% 0px", threshold: 0.1 });
-  document.querySelectorAll("section[id]").forEach(s => obs.observe(s));
-}
+window.addEventListener("hashchange", handleHash);
+window.addEventListener("popstate", () => {
+  if (!location.hash.startsWith("#component-")) {
+    detail.hidden = true;
+    grid.hidden = false;
+    const tb = document.querySelector(".catalog-toolbar");
+    if (tb) tb.hidden = false;
+  }
+});
+
+grid.innerHTML = `<div class="empty">Cargando componentes desde <code>public/components/*.md</code>…</div>`;
+loadAll();
