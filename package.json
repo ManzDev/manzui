@@ -1,7 +1,7 @@
 {
   "name": "manzui",
   "version": "0.0.2",
-  "description": "",
+  "description": "Vanilla WebComponents UI Library",
   "main": "./dist/lib/manzui.js",
   "module": "./dist/lib/manzui.js",
   "files": [
@@ -28,7 +28,7 @@
     "bump:major": "pnpm version major -m \"chore: bump to %s\""
   },
   "keywords": [],
-  "author": "",
+  "author": "ManzDev",
   "license": "ISC",
   "devEngines": {
     "packageManager": {

@@ -17,6 +17,14 @@ const TAG_MAP = {
   InputOTP: "input-otp",
 };
 
+// CDN base para el HTML mostrado / copiado / CodePen
+const CDN_BASE = "https://unpkg.com/manzui";
+
+// Reescribe src="/components/X.js" o src="/manzui/components/X.js" -> src="https://unpkg.com/manzui/X.js"
+function toCdnHtml(html) {
+  return html.replace(/src=(["'])(?:\/manzui)?\/components\/([^"']+)\1/g, `src="${CDN_BASE}/$2"`);
+}
+
 // Vite glob — descubre automáticamente todos los .md de public/components
 const mdModules = import.meta.glob("../../public/components/*.md", {
   query: "?raw",
@@ -86,6 +94,7 @@ const detailDesc = document.getElementById("detail-desc");
 const detailCode = document.getElementById("detail-code");
 const detailStage = document.getElementById("detail-stage");
 const detailCopy = document.getElementById("detail-copy");
+const detailCodepen = document.getElementById("detail-codepen");
 const detailBack = document.getElementById("detail-back");
 const codeDetails = document.getElementById("code-details");
 const sidebar = document.getElementById("sidebar");
@@ -233,7 +242,7 @@ async function openDetail(name) {
 
   detailTitle.innerHTML = `${escapeHtml(comp.title)} <span>&lt;${escapeHtml(comp.tag)}&gt;</span>`;
   detailDesc.textContent = comp.description;
-  detailCode.textContent = comp.rawBody;
+  detailCode.textContent = toCdnHtml(comp.rawBody);
   detailCode.className = "language-html";
   Prism.highlightElement(detailCode);
 
@@ -340,7 +349,7 @@ if (search) search.addEventListener("input", (e) => {
 if (detailBack) detailBack.addEventListener("click", closeDetail);
 if (detailCopy) detailCopy.addEventListener("click", async () => {
   if (!currentDetail) return;
-  const text = currentDetail.rawBody;
+  const text = toCdnHtml(currentDetail.rawBody);
   try {
     await navigator.clipboard.writeText(text);
     const prev = detailCopy.textContent;
@@ -355,6 +364,33 @@ if (detailCopy) detailCopy.addEventListener("click", async () => {
     ta.remove();
   }
 });
+
+function sendToCodePen() {
+  if (!currentDetail) return;
+  const html = toCdnHtml(currentDetail.rawBody);
+  const data = {
+    title: `${currentDetail.title} <${currentDetail.tag}> — ManzUI`,
+    description: currentDetail.description,
+    html,
+    editors: "100",
+  };
+  const form = document.createElement("form");
+  form.action = "https://codepen.io/pen/define/";
+  form.method = "POST";
+  form.target = "_blank";
+  form.style.display = "none";
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "data";
+  input.value = JSON.stringify(data);
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+  // Retirar el form con retardo para no cancelar el submit en algunos navegadores
+  setTimeout(() => form.remove(), 1000);
+}
+
+if (detailCodepen) detailCodepen.addEventListener("click", sendToCodePen);
 
 window.addEventListener("hashchange", handleHash);
 window.addEventListener("popstate", () => {
