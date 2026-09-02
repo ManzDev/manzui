@@ -65,18 +65,18 @@
           <button id="detail-back" class="btn btn-sm" type="button">← Volver</button>
         </div>
       </div>
+      <div class="detail-tabs" role="tablist" aria-label="Vista del componente">
+        <button class="detail-tab is-active" role="tab" id="tab-preview" aria-selected="true" aria-controls="panel-preview" data-tab="preview" type="button">Previsualización</button>
+        <button class="detail-tab" role="tab" id="tab-code" aria-selected="false" aria-controls="panel-code" data-tab="code" type="button">HTML</button>
+      </div>
       <div class="detail-body">
-        <div class="detail-preview">
-          <div class="detail-preview-label">Preview</div>
+        <div id="panel-preview" class="detail-panel" role="tabpanel" aria-labelledby="tab-preview">
           <div id="detail-stage" class="detail-stage"></div>
         </div>
-        <div class="code-wrap">
-          <div class="code-head">
-            <span>HTML del .md</span>
-            <a id="detail-md-link" href="#" target="_blank" rel="noopener"
-              style="font-size:0.75rem; color:var(--muted)">Abrir .md ↗</a>
+        <div id="panel-code" class="detail-panel" role="tabpanel" aria-labelledby="tab-code" hidden>
+          <div class="code-wrap">
+            <pre class="code"><code id="detail-code" class="language-html"></code></pre>
           </div>
-          <pre class="code"><code id="detail-code" class="language-html"></code></pre>
         </div>
       </div>
     </section>
