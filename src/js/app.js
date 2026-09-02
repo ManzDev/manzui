@@ -158,9 +158,9 @@ async function loadAll() {
     const name = path.split("/").pop().replace(/\.md$/, "");
     const { title, description, body } = parseMd(raw);
     const tag = deriveTag(name, body);
-    const js = `/components/${name}.js`;
-    const css = `/components/${name}.css`;
-    const doc = `/components/${name}.md`;
+    const js = `/manzui/components/${name}.js`;
+    const css = `/manzui/components/${name}.css`;
+    const doc = `/manzui/components/${name}.md`;
     if (typeof raw !== "string") {
       return { name, tag, title: name, description: `No se pudo cargar ${doc}`, js, css, doc, rawBody: "", error: true };
     }
@@ -267,7 +267,7 @@ async function openDetail(name) {
     try {
       // eslint-disable-next-line no-new-func
       new Function(code)();
-    } catch {}
+    } catch { }
   });
 }
 
@@ -316,7 +316,7 @@ if (search) search.addEventListener("input", (e) => {
     return;
   }
   // sidebar filtrado simple: reconstruir con filtrados
-  const filteredNames = new Set(all.filter(c => c.name.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)).map(c=>c.name));
+  const filteredNames = new Set(all.filter(c => c.name.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)).map(c => c.name));
   if (!sidebarNav) return;
   // reutiliza categorías pero solo con items filtrados
   const byName = new Map(all.map(c => [c.name, c]));
