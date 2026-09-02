@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "node .bin/build-lib.js",
+    "build:all": "vite build && node .bin/build-lib.js",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
   },
