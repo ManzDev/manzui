@@ -9,7 +9,6 @@
   ],
   "exports": {
     ".": "./dist/lib/manzui.js",
-    "./FileTree.js": "./dist/lib/FileTree.js",
     "./*.js": "./dist/lib/*.js",
     "./*.css": "./dist/lib/*.css"
   },
