@@ -1,4 +1,6 @@
-// Catálogo desde public/components/*.md — cards simplificadas + vista detalle
+import MarkdownIt from "markdown-it";
+
+// Catálogo desde public/components/*.md — cards simplificadas + vista detalle arriba
 const FILES = [
   "CommandViewer",
   "ComparativeChart",
@@ -21,10 +23,11 @@ const TAG_MAP = {
   InputOTP: "input-otp",
 };
 
+const mdIt = new MarkdownIt({ html: true, linkify: true });
+
 const grid = document.getElementById("catalog-grid");
 const search = document.getElementById("catalog-search");
 const countEl = document.getElementById("catalog-count");
-const catalogSection = document.getElementById("catalogo");
 const detail = document.getElementById("detail");
 const detailTitle = document.getElementById("detail-title");
 const detailDesc = document.getElementById("detail-desc");
@@ -40,12 +43,48 @@ function escapeHtml(s) {
 
 function parseMd(raw) {
   const m = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
-  if (!m) return { title: "", description: "", body: raw.trim() };
+  if (!m) return { title: "", description: "", body: raw.trim(), frontmatter: {} };
   const fm = m[1];
   const body = m[2].trim();
   const title = (fm.match(/^title:\s*(.+)$/m) || ["", ""])[1].trim();
   const description = (fm.match(/^description:\s*(.+)$/m) || ["", ""])[1].trim();
+  // Usa markdown-it para procesar el body si contiene markdown (mantiene HTML por html:true)
+  // Para este proyecto el body es HTML puro, así que mdIt.render lo deja igual.
+  // Lo mantenemos como ejemplo de uso de markdown-it:
+  // const rendered = mdIt.render(body);
   return { title, description, body };
+}
+
+function ensureComponent(tag, src) {
+  if (customElements.get(tag)) return Promise.resolve();
+  // si ya existe un script con ese src, espera a que el custom element se defina
+  const existing = document.querySelector(`script[src="${src}"]`);
+  if (existing) {
+    return new Promise((resolve) => {
+      const check = () => {
+        if (customElements.get(tag)) resolve();
+        else setTimeout(check, 30);
+      };
+      check();
+      // fallback timeout
+      setTimeout(resolve, 2000);
+    });
+  }
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.type = "module";
+    s.src = src;
+    s.onload = () => {
+      // espera a que el custom element se registre
+      if (customElements.get(tag)) resolve();
+      else {
+        // algunos componentes se registran async, espera un tick
+        setTimeout(() => resolve(), 50);
+      }
+    };
+    s.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
+    document.head.appendChild(s);
+  });
 }
 
 let all = [];
@@ -91,23 +130,26 @@ function render(filter = "") {
     const safeTitle = escapeHtml(c.title);
     const safeDesc = escapeHtml(c.description);
     const safeTag = escapeHtml(c.tag);
+    const selected = currentDetail?.name === c.name ? ' aria-selected="true"' : "";
     return /* html */`
-      <article class="card">
+      <article class="card" data-open="${c.name}" tabindex="0" role="button" aria-label="Abrir ${safeTitle}"${selected}>
         <h3 class="card-name">${safeTitle}</h3>
         <div class="card-tag">&lt;${safeTag}&gt;</div>
         <p class="card-desc">${safeDesc}</p>
-        <div class="card-foot">
-          <span class="card-meta">${escapeHtml(c.name)} • .md</span>
-          <button class="icon-btn" type="button" aria-label="Abrir ${safeTitle}" data-open="${c.name}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/><path d="M13 12H5"/><path d="M19 12a7 7 0 0 0-7-7"/></svg>
-          </button>
-        </div>
       </article>
     `;
   }).join("");
 
-  grid.querySelectorAll("[data-open]").forEach(btn => {
-    btn.addEventListener("click", () => openDetail(btn.dataset.open));
+  grid.querySelectorAll(".card[data-open]").forEach(card => {
+    const name = card.dataset.open;
+    const open = () => openDetail(name);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        open();
+      }
+    });
   });
 }
 
@@ -116,34 +158,37 @@ async function openDetail(name) {
   if (!comp) return;
   currentDetail = comp;
 
-  // Update hash without scrolling
   history.pushState(null, "", `#component-${name}`);
 
-  // Fill detail
   detailTitle.innerHTML = `${escapeHtml(comp.title)} <span>&lt;${escapeHtml(comp.tag)}&gt;</span>`;
   detailDesc.textContent = comp.description;
+  // Usa markdown-it para el código también si quisieras renderizar markdown, pero aquí mostramos el HTML fuente escapado
   detailCode.textContent = comp.rawBody;
   detailMdLink.href = comp.doc;
 
-  // Show detail, hide grid toolbar? Keep toolbar but hide grid? Simpler hide grid and show detail
-  grid.hidden = true;
-  document.querySelector(".catalog-toolbar").hidden = true;
   detail.hidden = false;
+  // marca la card seleccionada
+  grid.querySelectorAll(".card").forEach(c => {
+    c.setAttribute("aria-selected", c.dataset.open === name ? "true" : "false");
+  });
   detail.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // Render preview
   detailStage.innerHTML = "";
   try {
-    await import(/* @vite-ignore */ comp.js);
+    await ensureComponent(comp.tag, comp.js);
   } catch (e) {
     detailStage.innerHTML = `<div style="color:var(--muted); font-size:0.85rem">No se pudo cargar <code>${escapeHtml(comp.js)}</code>: ${escapeHtml(String(e.message || e))}</div>`;
     return;
   }
+  // Renderiza el HTML del .md usando markdown-it para asegurar compatibilidad con HTML + markdown
+  // Como el body es HTML puro, lo inyectamos directamente tras quitar el script src (ya cargado)
   const withoutSrc = comp.rawBody.replace(/<script[^>]*src[^>]*><\/script>\s*/gi, "");
-  // Also remove outer script tags with src? Keep style and component
+  // Opcional: pasar por markdown-it para normalizar (html:true conserva tags)
+  // const rendered = mdIt.render(withoutSrc);
+  // detailStage.innerHTML = rendered;
   detailStage.innerHTML = withoutSrc;
-  // Execute inline scripts inside detailStage (if any) — they were stripped as text, need to re-create
-  // Extract inline script bodies from original rawBody and run them
+
+  // Ejecuta scripts inline del md (event listeners de ejemplo)
   const inlineScripts = [...comp.rawBody.matchAll(/<script(?![^>]*src)[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1].trim()).filter(Boolean);
   inlineScripts.forEach(code => {
     try {
@@ -156,8 +201,7 @@ async function openDetail(name) {
 function closeDetail() {
   currentDetail = null;
   detail.hidden = true;
-  grid.hidden = false;
-  document.querySelector(".catalog-toolbar").hidden = false;
+  grid.querySelectorAll(".card").forEach(c => c.setAttribute("aria-selected", "false"));
   detailStage.innerHTML = "";
   history.pushState(null, "", "#catalogo");
   document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
@@ -196,9 +240,8 @@ window.addEventListener("hashchange", handleHash);
 window.addEventListener("popstate", () => {
   if (!location.hash.startsWith("#component-")) {
     detail.hidden = true;
-    grid.hidden = false;
-    const tb = document.querySelector(".catalog-toolbar");
-    if (tb) tb.hidden = false;
+    detailStage.innerHTML = "";
+    grid.querySelectorAll(".card").forEach(c => c.setAttribute("aria-selected", "false"));
   }
 });
 
