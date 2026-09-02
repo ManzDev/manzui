@@ -87,10 +87,7 @@ const detailCode = document.getElementById("detail-code");
 const detailStage = document.getElementById("detail-stage");
 const detailCopy = document.getElementById("detail-copy");
 const detailBack = document.getElementById("detail-back");
-const tabPreview = document.getElementById("tab-preview");
-const tabCode = document.getElementById("tab-code");
-const panelPreview = document.getElementById("panel-preview");
-const panelCode = document.getElementById("panel-code");
+const codeDetails = document.getElementById("code-details");
 const sidebar = document.getElementById("sidebar");
 const sidebarNav = document.getElementById("sidebar-nav");
 const sidebarCount = document.getElementById("sidebar-count");
@@ -139,16 +136,6 @@ function ensureComponent(tag, src) {
     s.onerror = () => reject(new Error(`No se pudo cargar ${src}`));
     document.head.appendChild(s);
   });
-}
-
-function setDetailTab(which) {
-  const isPreview = which === "preview";
-  tabPreview.classList.toggle("is-active", isPreview);
-  tabCode.classList.toggle("is-active", !isPreview);
-  tabPreview.setAttribute("aria-selected", String(isPreview));
-  tabCode.setAttribute("aria-selected", String(!isPreview));
-  panelPreview.hidden = !isPreview;
-  panelCode.hidden = isPreview;
 }
 
 function openSidebar() {
@@ -251,7 +238,7 @@ async function openDetail(name) {
   Prism.highlightElement(detailCode);
 
   detail.hidden = false;
-  setDetailTab("preview");
+  if (codeDetails) codeDetails.open = false;
   grid.querySelectorAll(".card").forEach(c => {
     c.setAttribute("aria-selected", c.dataset.open === name ? "true" : "false");
   });
@@ -350,8 +337,6 @@ if (search) search.addEventListener("input", (e) => {
   sidebarNav.querySelectorAll("[data-sidebar-open]").forEach(btn => btn.addEventListener("click", () => openDetail(btn.dataset.sidebarOpen)));
   syncSidebarActive();
 });
-if (tabPreview) tabPreview.addEventListener("click", () => setDetailTab("preview"));
-if (tabCode) tabCode.addEventListener("click", () => setDetailTab("code"));
 if (detailBack) detailBack.addEventListener("click", closeDetail);
 if (detailCopy) detailCopy.addEventListener("click", async () => {
   if (!currentDetail) return;
