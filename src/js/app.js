@@ -1,4 +1,8 @@
 import MarkdownIt from "markdown-it";
+import Prism from "prismjs";
+import "prismjs/components/prism-markup";
+import "prismjs/components/prism-css";
+import "prismjs/components/prism-javascript";
 
 // Catálogo desde public/components/*.md — cards simplificadas + vista detalle arriba
 const FILES = [
@@ -162,8 +166,10 @@ async function openDetail(name) {
 
   detailTitle.innerHTML = `${escapeHtml(comp.title)} <span>&lt;${escapeHtml(comp.tag)}&gt;</span>`;
   detailDesc.textContent = comp.description;
-  // Usa markdown-it para el código también si quisieras renderizar markdown, pero aquí mostramos el HTML fuente escapado
+  // Highlight con Prism + Victor Mono: inyecta y resalta como HTML
   detailCode.textContent = comp.rawBody;
+  detailCode.className = "language-html";
+  Prism.highlightElement(detailCode);
   detailMdLink.href = comp.doc;
 
   detail.hidden = false;
