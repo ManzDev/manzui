@@ -6,6 +6,6 @@ description: Comparador de imágenes con slider arrastrable, zoom con rueda y se
 <script type="module" src="/components/ImageSliderCompare.js"></script>
 
 <image-slider-compare pos="50" zoom="100">
-  <img src="/manzui/manz.png" alt="Manz">
-  <img src="/manzui/moai.png" alt="Moai">
+  <img src="https://manzdev.github.io/manzui/manz.png" alt="Manz">
+  <img src="https://manzdev.github.io/manzui/moai.png" alt="Moai">
 </image-slider-compare>

@@ -61,8 +61,8 @@ description: Cuenta atrás flip-clock con días, horas, minutos y segundos que e
 <count-down date="2026-12-31T23:59:59.000"></count-down>
 
 <script>
-  document.querySelector("count-down").addEventListener("countdown-end", () => {
-    console.log("¡Tiempo finalizado!");
+  document.addEventListener("countdown-end", () => {
+    console.log("LLegó al final de la cuenta atrás");
   });
 <\/script>
 `,p=`---
@@ -91,7 +91,7 @@ description: Comparador de máscaras con sliders de recorte de resultado y opaci
 <script type="module" src="/components/ImageMaskCompare.js"><\/script>
 
 <image-mask-compare
-  path="/manzui/"
+  path="https://manzdev.github.io/manzui/"
   base="manz.png"
   mask="moai.png"
   result="manz.png">
@@ -104,8 +104,8 @@ description: Comparador de imágenes con slider arrastrable, zoom con rueda y se
 <script type="module" src="/components/ImageSliderCompare.js"><\/script>
 
 <image-slider-compare pos="50" zoom="100">
-  <img src="/manzui/manz.png" alt="Manz">
-  <img src="/manzui/moai.png" alt="Moai">
+  <img src="https://manzdev.github.io/manzui/manz.png" alt="Manz">
+  <img src="https://manzdev.github.io/manzui/moai.png" alt="Moai">
 </image-slider-compare>
 `,g=`---
 title: ImageValuesViewer
@@ -116,8 +116,8 @@ description: Visor de imágenes por strength o por lista de opciones con templat
 
 <image-values-viewer path="/">
   <template>
-    <option value="/manzui/manz.png">Manz</option>
-    <option value="/manzui/moai.png">Moai</option>
+    <option value="https://manzdev.github.io/manzui/manz.png">Manz</option>
+    <option value="https://manzdev.github.io/manzui/moai.png">Moai</option>
   </template>
 </image-values-viewer>
 `,_=`---

@@ -8,7 +8,7 @@ description: Cuenta atrás flip-clock con días, horas, minutos y segundos que e
 <count-down date="2026-12-31T23:59:59.000"></count-down>
 
 <script>
-  document.querySelector("count-down").addEventListener("countdown-end", () => {
-    console.log("¡Tiempo finalizado!");
+  document.addEventListener("countdown-end", () => {
+    console.log("LLegó al final de la cuenta atrás");
   });
 </script>
