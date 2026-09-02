@@ -4,18 +4,7 @@ import "prismjs/components/prism-markup";
 import "prismjs/components/prism-css";
 import "prismjs/components/prism-javascript";
 
-// Catálogo desde public/components/*.md — cards simplificadas + vista detalle arriba
-const FILES = [
-  "CommandViewer",
-  "ComparativeChart",
-  "CountDown",
-  "FileTree",
-  "ImageMaskCompare",
-  "ImageSliderCompare",
-  "ImageValuesViewer",
-  "InputOTP",
-];
-
+// Catálogo — fuente de verdad: public/components/*.md (Vite lo resuelve en build/dev)
 const TAG_MAP = {
   CommandViewer: "command-viewer",
   ComparativeChart: "comparative-chart",
@@ -27,7 +16,28 @@ const TAG_MAP = {
   InputOTP: "input-otp",
 };
 
+// Vite glob — descubre automáticamente todos los .md de public/components
+const mdModules = import.meta.glob("../../public/components/*.md", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+});
+
 const mdIt = new MarkdownIt({ html: true, linkify: true });
+
+function updateCounts(n) {
+  document.querySelectorAll("[data-component-count]").forEach((el) => {
+    el.textContent = String(n);
+  });
+}
+
+function deriveTag(name, body) {
+  if (TAG_MAP[name]) return TAG_MAP[name];
+  const m = body.match(/<([a-z][a-z0-9-]*)\b/);
+  if (m) return m[1];
+  // fallback: kebab-case del nombre
+  return name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+}
 
 const grid = document.getElementById("catalog-grid");
 const search = document.getElementById("catalog-search");
@@ -102,22 +112,22 @@ let all = [];
 let currentDetail = null;
 
 async function loadAll() {
-  const results = await Promise.all(FILES.map(async (name) => {
-    const tag = TAG_MAP[name];
+  const entries = Object.entries(mdModules);
+  const results = entries.map(([path, raw]) => {
+    const name = path.split("/").pop().replace(/\.md$/, "");
+    const { title, description, body } = parseMd(raw);
+    const tag = deriveTag(name, body);
     const js = `/components/${name}.js`;
     const css = `/components/${name}.css`;
     const doc = `/components/${name}.md`;
-    try {
-      const res = await fetch(doc);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const raw = await res.text();
-      const { title, description, body } = parseMd(raw);
-      return { name, tag, title: title || name, description: description || "", js, css, doc, rawBody: body };
-    } catch (e) {
-      return { name, tag, title: name, description: `No se pudo cargar ${doc}: ${e.message}`, js, css, doc, rawBody: "", error: true };
+    if (typeof raw !== "string") {
+      return { name, tag, title: name, description: `No se pudo cargar ${doc}`, js, css, doc, rawBody: "", error: true };
     }
-  }));
+    return { name, tag, title: title || name, description: description || "", js, css, doc, rawBody: body };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+
   all = results;
+  updateCounts(all.length);
   render("");
   handleHash();
 }
@@ -224,7 +234,7 @@ function handleHash() {
   const m = h.match(/^#component-(.+)$/);
   if (m && all.length) {
     const name = m[1];
-    if (FILES.includes(name)) openDetail(name);
+    if (all.some((c) => c.name === name)) openDetail(name);
   }
 }
 
