@@ -28,6 +28,12 @@
         <h2>Categorías</h2>
         <span id="sidebar-count" class="sidebar-count"></span>
       </div>
+      <div class="sidebar-search">
+        <label class="search-wrap" aria-label="Buscar componente">
+          <span aria-hidden="true">⌕</span>
+          <input id="catalog-search" type="search" placeholder="Buscar…" autocomplete="off">
+        </label>
+      </div>
       <nav id="sidebar-nav" class="sidebar-nav" aria-label="Componentes por categoría"></nav>
       <div class="sidebar-footer">
         <span class="catalog-hint">📘 <span data-component-count>8</span> × <code>/components/*.md</code></span>
@@ -63,7 +69,7 @@
             <div class="stat"><b>100%</b> <span>vanilla</span></div>
           </div>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#catalogo">Explorar catálogo ↓</a>
+            <button id="random-component" class="btn btn-primary" type="button">Elegir componente al azar →</button>
           </div>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -105,23 +111,7 @@
           </div>
         </section>
 
-        <section id="catalogo" aria-labelledby="catalogo-title">
-          <div class="section-head">
-            <div>
-              <h2 id="catalogo-title">Catálogo <em>de componentes</em></h2>
-              <p>Lista de los <code>componentes</code> disponibles en <code>public/components/</code>.</p>
-            </div>
-            <div class="catalog-count" id="catalog-count">cargando…</div>
-          </div>
-
-          <div class="catalog-toolbar">
-            <label class="search-wrap" aria-label="Buscar componente">
-              <span aria-hidden="true">⌕</span>
-              <input id="catalog-search" type="search" placeholder="Buscar por nombre, tag o descripción…"
-                autocomplete="off">
-            </label>
-          </div>
-
+        <section id="catalogo" aria-label="Catálogo">
           <div id="catalog-grid" class="grid" aria-live="polite"></div>
           <div id="catalog-status" class="empty" hidden></div>
         </section>

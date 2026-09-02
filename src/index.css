@@ -202,7 +202,7 @@
     /* App layout — sidebar global dark minimalista */
     .app { display: flex; min-height: 100vh; }
     .sidebar--global {
-      width: 250px;
+      width: 320px;
       flex-shrink: 0;
       background: #0a0a14;
       border-right: 1px solid rgba(255,255,255,0.06);
@@ -266,13 +266,23 @@
       opacity: 0.6;
       font-family: var(--font-body);
     }
-    .sidebar-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
+    .sidebar-search { margin-bottom: 0.9rem; }
+    .sidebar-search .search-wrap { min-width: 0; }
+    .sidebar-search .search-wrap input {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.08);
+      padding: 0.55rem 0.8rem 0.55rem 2rem;
+      font-size: 0.84rem;
+    }
+    .sidebar-search .search-wrap input::placeholder { color: var(--muted); opacity: 0.7; }
+    .sidebar-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
     .sidebar-item {
       display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.15rem;
       width: 100%;
-      padding: 0.4rem 0.6rem;
+      padding: 0.5rem 0.6rem;
       border-radius: 8px;
       border: 0;
       background: transparent;
@@ -291,13 +301,15 @@
       color: var(--text);
     }
     .sidebar-item-tag {
-      margin-left: auto;
+      display: block;
+      margin-left: 0;
       font-family: var(--font-code);
       font-size: 0.62rem;
       color: var(--muted);
-      opacity: 0.5;
+      opacity: 0.55;
       white-space: nowrap;
       font-weight: 400;
+      line-height: 1.2;
     }
     .sidebar-item.is-active .sidebar-item-tag { color: var(--muted); opacity: 0.9; }
     .sidebar-empty { font-size: 0.8rem; color: var(--muted); font-style: italic; padding: 0.3rem 0.4rem; }
@@ -453,11 +465,14 @@
       font-family: var(--font-header);
     }
     .card-tag {
-      font-family: ui-monospace, monospace;
-      font-size: 0.78rem;
+      display: block;
+      margin-top: 0.2rem;
+      font-family: var(--font-code);
+      font-size: 0.74rem;
       color: var(--cyan);
       font-weight: 600;
       letter-spacing: 0.02em;
+      line-height: 1.2;
     }
     .card-desc {
       margin: 0;

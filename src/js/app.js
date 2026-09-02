@@ -96,6 +96,7 @@ const sidebarNav = document.getElementById("sidebar-nav");
 const sidebarCount = document.getElementById("sidebar-count");
 const sidebarToggle = document.getElementById("sidebar-toggle");
 const sidebarOverlay = document.getElementById("sidebar-overlay");
+const randomBtn = document.getElementById("random-component");
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -184,6 +185,14 @@ async function loadAll() {
   renderSidebar();
   render("");
   handleHash();
+  // Por defecto, FileTree seleccionado si no hay hash
+  if (!location.hash || location.hash === "#catalogo") {
+    const hasComponentHash = location.hash.startsWith("#component-");
+    if (!hasComponentHash && !currentDetail) {
+      const fallback = all.find((c) => c.name === "FileTree") || all[0];
+      if (fallback) openDetail(fallback.name);
+    }
+  }
 }
 
 function render(filter = "") {
@@ -303,7 +312,44 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && sidebar?.classList.contains("is-open")) closeSidebar();
 });
 
-if (search) search.addEventListener("input", (e) => render(e.target.value));
+if (randomBtn) randomBtn.addEventListener("click", () => {
+  if (!all.length) return;
+  const pool = all.filter((c) => c.name !== currentDetail?.name);
+  const candidates = pool.length ? pool : all;
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  openDetail(pick.name);
+});
+
+if (search) search.addEventListener("input", (e) => {
+  render(e.target.value);
+  // filtra también sidebar (oculta categorías vacías)
+  const q = e.target.value.trim().toLowerCase();
+  if (!q) {
+    renderSidebar();
+    return;
+  }
+  // sidebar filtrado simple: reconstruir con filtrados
+  const filteredNames = new Set(all.filter(c => c.name.toLowerCase().includes(q) || c.tag.toLowerCase().includes(q) || c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)).map(c=>c.name));
+  if (!sidebarNav) return;
+  // reutiliza categorías pero solo con items filtrados
+  const byName = new Map(all.map(c => [c.name, c]));
+  const used = new Set();
+  let html = "";
+  for (const [cat, names] of Object.entries(categoriesConfig)) {
+    const items = names.map(n => byName.get(n)).filter(c => c && filteredNames.has(c.name));
+    if (!items.length) continue;
+    items.forEach(c => used.add(c.name));
+    html += `<section class="sidebar-category"><h3 class="sidebar-category-title">${escapeHtml(cat)} <span style="color:var(--muted);font-weight:400">(${items.length})</span></h3><ul class="sidebar-list">${items.map(c => `<li><button class="sidebar-item" data-sidebar-open="${c.name}" aria-label="Abrir ${escapeHtml(c.title)}"><span>${escapeHtml(c.title)}</span><span class="sidebar-item-tag">&lt;${escapeHtml(c.tag)}&gt;</span></button></li>`).join("")}</ul></section>`;
+  }
+  const remaining = all.filter(c => !used.has(c.name) && filteredNames.has(c.name));
+  if (remaining.length) {
+    html += `<section class="sidebar-category"><h3 class="sidebar-category-title">Otros <span style="color:var(--muted);font-weight:400">(${remaining.length})</span></h3><ul class="sidebar-list">${remaining.map(c => `<li><button class="sidebar-item" data-sidebar-open="${c.name}"><span>${escapeHtml(c.title)}</span><span class="sidebar-item-tag">&lt;${escapeHtml(c.tag)}&gt;</span></button></li>`).join("")}</ul></section>`;
+  }
+  if (!html) html = `<p class="sidebar-empty">Sin resultados para “${escapeHtml(q)}”</p>`;
+  sidebarNav.innerHTML = html;
+  sidebarNav.querySelectorAll("[data-sidebar-open]").forEach(btn => btn.addEventListener("click", () => openDetail(btn.dataset.sidebarOpen)));
+  syncSidebarActive();
+});
 if (tabPreview) tabPreview.addEventListener("click", () => setDetailTab("preview"));
 if (tabCode) tabCode.addEventListener("click", () => setDetailTab("code"));
 if (detailBack) detailBack.addEventListener("click", closeDetail);
