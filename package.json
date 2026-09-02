@@ -23,9 +23,9 @@
     "build:all": "vite build && node .bin/build-lib.js",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
-    "bump": "npm version patch -m \"chore: bump to %s\"",
-    "bump:minor": "npm version minor -m \"chore: bump to %s\"",
-    "bump:major": "npm version major -m \"chore: bump to %s\""
+    "bump": "pnpm version patch -m \"chore: bump to %s\"",
+    "bump:minor": "pnpm version minor -m \"chore: bump to %s\"",
+    "bump:major": "pnpm version major -m \"chore: bump to %s\""
   },
   "keywords": [],
   "author": "",
