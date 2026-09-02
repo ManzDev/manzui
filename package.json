@@ -1,11 +1,27 @@
 {
   "name": "manzui",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/lib/manzui.js",
+  "module": "./dist/lib/manzui.js",
+  "files": [
+    "dist/lib"
+  ],
+  "exports": {
+    ".": "./dist/lib/manzui.js",
+    "./FileTree.js": "./dist/lib/FileTree.js",
+    "./*.js": "./dist/lib/*.js",
+    "./*.css": "./dist/lib/*.css"
+  },
+  "sideEffects": [
+    "**/*.js",
+    "**/*.css"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "node .bin/build-lib.js",
+    "build:all": "vite build && node .bin/build-lib.js",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
   },
