@@ -541,20 +541,16 @@
     .detail-body { padding: 1rem; display: grid; gap: 1rem; }
     .detail-stage { background: #151520; border-radius: 12px; padding: 0.8rem; border: 1px solid var(--border); min-height: 80px; }
     .code-details {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #0f0f1e;
+      border: none;
+      background: transparent;
     }
     .code-details-summary {
-      padding: 0.6rem 0.85rem;
+      padding: 0.7rem 0.2rem;
       font-family: var(--font-header);
-      font-weight: 600;
-      font-size: 0.85rem;
+      font-weight: 700;
+      font-size: 1rem;
       color: var(--text);
       cursor: pointer;
-    }
-    .code-details[open] .code-details-summary {
-      border-bottom: 1px solid var(--border);
     }
     .detail-stage comparative-chart::part(selected) { --color-selected: steelblue; color: #888; }
     input-otp { --otp-bg: white; --otp-color: black; --otp-size: 32px; --otp-gap: 4px; --otp-radius: 8px; }
