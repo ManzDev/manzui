@@ -1,0 +1,155 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.container {
+  background: #0c0c0c;
+  border: 1px solid #1a1a1a;
+  box-shadow: 8px 8px #0003;
+  overflow: hidden;
+}
+
+.image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.15s ease;
+  }
+
+  &:hover .ref-img { opacity: 0 }
+
+  .ref-img {
+    --size: 128px;
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: var(--size);
+    height: var(--size);
+    border: 2px solid #eee;
+    object-fit: cover;
+    opacity: 1;
+    transition: opacity 0.5s;
+  }
+}
+
+.strength-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: #0ece0e;
+  color: #000;
+  font-family: "Victor Mono", monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  pointer-events: none;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #050505;
+  border-top: 1px solid #1a1a1a;
+
+  label {
+    color: #ccc;
+    font-family: "Victor Mono", monospace;
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+}
+
+.range-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="range"] {
+  flex: 1;
+  height: 4px;
+  accent-color: var(--color);
+  background: #1a1a1a;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #0c8c0c;
+    border: 2px solid #000;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #0fa50f;
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #0c8c0c;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+}
+
+.value {
+  color: #0c8c0c;
+  font-family: "Victor Mono", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  min-width: 40px;
+  text-align: right;
+}
+
+.ticks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 4px;
+  padding: 0 16px 12px;
+  background: #050505;
+}
+
+.tick {
+  color: #444;
+  font-family: "Victor Mono", monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.15s;
+  padding: 2px 4px;
+
+  &:hover {
+    color: #0c8c0c;
+  }
+
+  &.active {
+    color: #0c8c0c;
+    font-weight: 700;
+  }
+}

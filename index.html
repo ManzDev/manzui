@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManzUI — Librería de WebComponents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700;800&family=Jost:wght@400;500;600;700&family=Victor+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script type="module" crossorigin src="/manzui/assets/index-Bgfghaug.js"></script>
+  <link rel="stylesheet" crossorigin href="/manzui/assets/index-BNx8XN_l.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside id="sidebar" class="sidebar sidebar--global" aria-label="Categorías de componentes">
+      <div class="sidebar-brand">
+        <img class="logo-text" src="/manzui/manzui-text.png" alt="ManzUI">
+      </div>
+      <div class="sidebar-header">
+        <h2>Categorías</h2>
+        <span id="sidebar-count" class="sidebar-count"></span>
+      </div>
+      <div class="sidebar-search">
+        <label class="search-wrap" aria-label="Buscar componente">
+          <span aria-hidden="true">⌕</span>
+          <input id="catalog-search" type="search" placeholder="Buscar…" autocomplete="off">
+        </label>
+      </div>
+      <nav id="sidebar-nav" class="sidebar-nav" aria-label="Componentes por categoría"></nav>
+      <div class="sidebar-footer">
+        <span class="catalog-hint">📘 <span data-component-count>8</span> × <code>/components/*.js</code></span>
+      </div>
+    </aside>
+
+    <div class="app-main">
+      <header class="site-header">
+        <div class="header-inner">
+          <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir categorías" aria-expanded="false"
+            aria-controls="sidebar">☰</button>
+          <a class="brand" href="#">
+            <div class="brand-mark">mz</div>
+            <div>
+              <b>manzui</b>
+              <span>WebComponents</span>
+            </div>
+          </a>
+          <nav class="nav" aria-label="Navegación">
+            <a href="https://manz.dev/">Manz.dev</a>
+          </nav>
+        </div>
+      </header>
+
+      <section class="hero" aria-label="Portada">
+        <div class="hero-copy">
+          <h1><span class="mm">Manz</span><span class="mui">UI</span><br><span class="m-sm">Librería
+              de WebComponents</span></h1>
+          <p><strong><span data-component-count>8</span> componentes vanilla</strong> sin dependencias. Cada tarjeta
+            muestra nombre, tag y descripción. Pulsa
+            acceder para ver el componente y el HTML para usarlo.</p>
+          <div class="hero-stats">
+            <div class="stat"><b data-component-count>8</b> <span>componentes</span></div>
+            <div class="stat"><b>0</b> <span>dependencias</span></div>
+            <div class="stat"><b>100%</b> <span>vanilla</span></div>
+          </div>
+          <div class="hero-actions">
+            <button id="random-component" class="btn btn-primary" type="button">Elegir componente al azar →</button>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-img-wrap">
+            <img src="/manzui/manzui.jpg" alt="ManzUI hero — estética synthwave" width="800" height="450" loading="eager"
+              decoding="async">
+          </div>
+          <div class="hero-badge">✦ Desarrollado por Manzdev</div>
+        </div>
+      </section>
+
+      <main class="content">
+        <section id="detail" class="detail" hidden aria-live="polite">
+          <div class="detail-header">
+            <div>
+              <h3 id="detail-title"></h3>
+              <p id="detail-desc"></p>
+            </div>
+            <div class="detail-actions">
+              <button id="detail-copy" class="btn btn-sm" type="button">Copiar HTML</button>
+              <button id="detail-back" class="btn btn-sm" type="button">← Volver</button>
+            </div>
+          </div>
+          <div class="detail-body">
+            <div id="detail-stage" class="detail-stage"></div>
+            <details class="code-details" id="code-details">
+              <summary class="code-details-summary">Mostrar HTML</summary>
+              <div class="code-wrap">
+                <pre class="code"><code id="detail-code" class="language-html"></code></pre>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <section id="catalogo" aria-label="Catálogo">
+          <h2>Otros componentes</h2>
+          <div id="catalog-grid" class="grid" aria-live="polite"></div>
+          <div id="catalog-status" class="empty" hidden></div>
+        </section>
+      </main>
+
+      <footer>
+        <a href="/">manzui</a> — <a href="https://manz.dev/">Manz.dev</a> — <a href="https://ai.manz.dev/">AI Manz</a>
+      </footer>
+    </div>
+  </div>
+  <div id="sidebar-overlay" class="sidebar-overlay" hidden></div>
+
+</body>
+
+</html>

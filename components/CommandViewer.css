@@ -1,0 +1,199 @@
+:host {
+  display: block;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.command-viewer {
+  background: #0c0c0c;
+  border: 1px solid #1a1a1a;
+  box-shadow: 8px 8px #0003;
+  overflow: hidden;
+  font-family: "Victor Mono", monospace;
+  color: #ccc;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #050505;
+  border-bottom: 1px solid #1a1a1a;
+
+  .title {
+    color: #eee;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .counter {
+    color: #888;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .subtitle {
+    color: #555;
+    font-size: 0.85rem;
+    font-weight: 400;
+  }
+}
+
+.body {
+  background: #0c0c0c;
+  padding: 12px 14px;
+}
+
+.command {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .prompt {
+    color: var(--color, #0c8c0c);
+    font-weight: 700;
+    user-select: none;
+  }
+
+  .cmd {
+    flex: 1;
+    color: #eee;
+    font-size: 1rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .copy {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    color: #666;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      color: #eee;
+      background: #1a1a1a;
+    }
+
+    &.copied {
+      color: var(--color, #0c8c0c);
+    }
+  }
+}
+
+.output {
+  display: block;
+  margin-top: 8px;
+  max-height: 240px;
+  overflow: auto;
+  color: #9a9a9a;
+  font-size: 0.95rem;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.cmd.typing::after {
+  content: "█";
+  margin-left: 2px;
+  color: var(--color, #0c8c0c);
+  animation: blink 1s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmd.typing::after {
+    content: none;
+    animation: none;
+  }
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #050505;
+  border-top: 1px solid #1a1a1a;
+
+  .nav {
+    background: #1a1a1a;
+    color: #ccc;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+
+    &:hover:not(:disabled) {
+      background: #262626;
+      color: #eee;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+  }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #333;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+
+    &:hover {
+      background: #555;
+    }
+
+    &.active {
+      background: var(--color, #0c8c0c);
+      transform: scale(1.2);
+    }
+  }
+}
+
+.notice {
+  padding: 16px;
+  color: #888;
+  font-family: "Victor Mono", monospace;
+  font-size: 0.95rem;
+  text-align: center;
+}
