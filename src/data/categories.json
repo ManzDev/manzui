@@ -1,0 +1,8 @@
+{
+  "Navegación": ["FileTree"],
+  "Código": ["CommandViewer"],
+  "Datos": ["ComparativeChart"],
+  "Fechas": ["CountDown"],
+  "Formularios": ["InputOTP"],
+  "Imágenes": ["ImageMaskCompare", "ImageSliderCompare", "ImageValuesViewer"]
+}

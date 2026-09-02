@@ -3,6 +3,7 @@ import Prism from "prismjs";
 import "prismjs/components/prism-markup";
 import "prismjs/components/prism-css";
 import "prismjs/components/prism-javascript";
+import categoriesConfig from "../data/categories.json";
 
 // Catálogo — fuente de verdad: public/components/*.md (Vite lo resuelve en build/dev)
 const TAG_MAP = {
@@ -35,8 +36,45 @@ function deriveTag(name, body) {
   if (TAG_MAP[name]) return TAG_MAP[name];
   const m = body.match(/<([a-z][a-z0-9-]*)\b/);
   if (m) return m[1];
-  // fallback: kebab-case del nombre
   return name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+}
+
+function renderSidebar() {
+  if (!sidebarNav) return;
+  const byName = new Map(all.map((c) => [c.name, c]));
+  const used = new Set();
+  let html = "";
+  for (const [cat, names] of Object.entries(categoriesConfig)) {
+    const items = names.map((n) => byName.get(n)).filter(Boolean);
+    if (items.length === 0) continue;
+    items.forEach((c) => used.add(c.name));
+    html += `<section class="sidebar-category"><h3 class="sidebar-category-title">${escapeHtml(cat)} <span style="color:var(--muted);font-weight:400">(${items.length})</span></h3><ul class="sidebar-list">${items.map((c) => `
+      <li><button class="sidebar-item" data-sidebar-open="${c.name}" aria-label="Abrir ${escapeHtml(c.title)}"><span>${escapeHtml(c.title)}</span><span class="sidebar-item-tag">&lt;${escapeHtml(c.tag)}&gt;</span></button></li>
+    `).join("")}</ul></section>`;
+  }
+  const remaining = all.filter((c) => !used.has(c.name));
+  if (remaining.length) {
+    html += `<section class="sidebar-category"><h3 class="sidebar-category-title">Otros <span style="color:var(--muted);font-weight:400">(${remaining.length})</span></h3><ul class="sidebar-list">${remaining.map((c) => `
+      <li><button class="sidebar-item" data-sidebar-open="${c.name}" aria-label="Abrir ${escapeHtml(c.title)}"><span>${escapeHtml(c.title)}</span><span class="sidebar-item-tag">&lt;${escapeHtml(c.tag)}&gt;</span></button></li>
+    `).join("")}</ul></section>`;
+  }
+  if (!html) html = `<p class="sidebar-empty">No hay componentes</p>`;
+  sidebarNav.innerHTML = html;
+  if (sidebarCount) sidebarCount.textContent = `${all.length} comps`;
+  sidebarNav.querySelectorAll("[data-sidebar-open]").forEach((btn) => {
+    btn.addEventListener("click", () => openDetail(btn.dataset.sidebarOpen));
+  });
+  syncSidebarActive();
+}
+
+function syncSidebarActive() {
+  if (!sidebarNav) return;
+  const name = currentDetail?.name;
+  sidebarNav.querySelectorAll(".sidebar-item").forEach((btn) => {
+    const isActive = btn.dataset.sidebarOpen === name;
+    btn.classList.toggle("is-active", isActive);
+    btn.setAttribute("aria-selected", String(isActive));
+  });
 }
 
 const grid = document.getElementById("catalog-grid");
@@ -53,7 +91,11 @@ const tabPreview = document.getElementById("tab-preview");
 const tabCode = document.getElementById("tab-code");
 const panelPreview = document.getElementById("panel-preview");
 const panelCode = document.getElementById("panel-code");
-
+const sidebar = document.getElementById("sidebar");
+const sidebarNav = document.getElementById("sidebar-nav");
+const sidebarCount = document.getElementById("sidebar-count");
+const sidebarToggle = document.getElementById("sidebar-toggle");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
 function escapeHtml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
@@ -108,6 +150,17 @@ function setDetailTab(which) {
   panelCode.hidden = isPreview;
 }
 
+function openSidebar() {
+  sidebar?.classList.add("is-open");
+  sidebarToggle?.setAttribute("aria-expanded", "true");
+  if (sidebarOverlay) sidebarOverlay.hidden = false;
+}
+function closeSidebar() {
+  sidebar?.classList.remove("is-open");
+  sidebarToggle?.setAttribute("aria-expanded", "false");
+  if (sidebarOverlay) sidebarOverlay.hidden = true;
+}
+
 let all = [];
 let currentDetail = null;
 
@@ -128,6 +181,7 @@ async function loadAll() {
 
   all = results;
   updateCounts(all.length);
+  renderSidebar();
   render("");
   handleHash();
 }
@@ -189,11 +243,12 @@ async function openDetail(name) {
 
   detail.hidden = false;
   setDetailTab("preview");
-  // marca la card seleccionada
   grid.querySelectorAll(".card").forEach(c => {
     c.setAttribute("aria-selected", c.dataset.open === name ? "true" : "false");
   });
+  syncSidebarActive();
   detail.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (window.innerWidth <= 860) closeSidebar();
 
   detailStage.innerHTML = "";
   try {
@@ -224,6 +279,7 @@ function closeDetail() {
   currentDetail = null;
   detail.hidden = true;
   grid.querySelectorAll(".card").forEach(c => c.setAttribute("aria-selected", "false"));
+  syncSidebarActive();
   detailStage.innerHTML = "";
   history.pushState(null, "", "#catalogo");
   document.getElementById("catalogo").scrollIntoView({ behavior: "smooth" });
@@ -237,6 +293,15 @@ function handleHash() {
     if (all.some((c) => c.name === name)) openDetail(name);
   }
 }
+
+if (sidebarToggle) sidebarToggle.addEventListener("click", () => {
+  const isOpen = sidebar?.classList.contains("is-open");
+  if (isOpen) closeSidebar(); else openSidebar();
+});
+if (sidebarOverlay) sidebarOverlay.addEventListener("click", closeSidebar);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && sidebar?.classList.contains("is-open")) closeSidebar();
+});
 
 if (search) search.addEventListener("input", (e) => render(e.target.value));
 if (tabPreview) tabPreview.addEventListener("click", () => setDetailTab("preview"));
@@ -266,6 +331,7 @@ window.addEventListener("popstate", () => {
     detail.hidden = true;
     detailStage.innerHTML = "";
     grid.querySelectorAll(".card").forEach(c => c.setAttribute("aria-selected", "false"));
+    syncSidebarActive();
   }
 });
 
