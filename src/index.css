@@ -542,35 +542,20 @@
     .detail-stage { background: #151520; border-radius: 12px; padding: 0.8rem; border: 1px solid var(--border); min-height: 80px; }
     .code-details {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: #0a0a12;
+      border-radius: 8px;
+      background: #0f0f1e;
     }
-    .code-details[open] { border-color: var(--border-hover); }
     .code-details-summary {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      padding: 0.75rem 0.9rem;
+      padding: 0.6rem 0.85rem;
       font-family: var(--font-header);
-      font-weight: 700;
-      font-size: 0.84rem;
-      letter-spacing: 0.02em;
-      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text);
       cursor: pointer;
-      user-select: none;
-      background: rgba(255,255,255,0.02);
     }
     .code-details[open] .code-details-summary {
-      color: var(--text);
-      background: rgba(255,42,157,0.06);
       border-bottom: 1px solid var(--border);
     }
-    .code-details-summary::-webkit-details-marker { display: none; }
-    .code-details-chevron { transition: transform 0.2s; font-size: 0.9rem; }
-    .code-details[open] .code-details-chevron { transform: rotate(180deg); }
     .detail-stage comparative-chart::part(selected) { --color-selected: steelblue; color: #888; }
     input-otp { --otp-bg: white; --otp-color: black; --otp-size: 32px; --otp-gap: 4px; --otp-radius: 8px; }
     footer { max-width: 1100px; margin: 0 auto; padding: 1.2rem 1rem; color: var(--muted); font-size: 0.75rem; border-top: 1px solid var(--border); width: 100%; text-align: center; }
