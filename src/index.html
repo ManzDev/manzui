@@ -18,11 +18,7 @@
   <div class="app">
     <aside id="sidebar" class="sidebar sidebar--global" aria-label="Categorías de componentes">
       <div class="sidebar-brand">
-        <div class="brand-mark">mz</div>
-        <div>
-          <b>manzui</b>
-          <span>WebComponents</span>
-        </div>
+        <img class="logo-text" src="/manzui-text.png" alt="ManzUI">
       </div>
       <div class="sidebar-header">
         <h2>Categorías</h2>
@@ -36,14 +32,15 @@
       </div>
       <nav id="sidebar-nav" class="sidebar-nav" aria-label="Componentes por categoría"></nav>
       <div class="sidebar-footer">
-        <span class="catalog-hint">📘 <span data-component-count>8</span> × <code>/components/*.md</code></span>
+        <span class="catalog-hint">📘 <span data-component-count>8</span> × <code>/components/*.js</code></span>
       </div>
     </aside>
 
     <div class="app-main">
       <header class="site-header">
         <div class="header-inner">
-          <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir categorías" aria-expanded="false" aria-controls="sidebar">☰</button>
+          <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir categorías" aria-expanded="false"
+            aria-controls="sidebar">☰</button>
           <a class="brand" href="#">
             <div class="brand-mark">mz</div>
             <div>
@@ -61,7 +58,8 @@
         <div class="hero-copy">
           <h1><span class="mm">Manz</span><span class="mui">UI</span><br><span class="m-sm">Librería
               de WebComponents</span></h1>
-          <p><strong><span data-component-count>8</span> componentes vanilla</strong> sin dependencias. Cada tarjeta muestra nombre, tag y descripción. Pulsa
+          <p><strong><span data-component-count>8</span> componentes vanilla</strong> sin dependencias. Cada tarjeta
+            muestra nombre, tag y descripción. Pulsa
             acceder para ver el componente y el HTML para usarlo.</p>
           <div class="hero-stats">
             <div class="stat"><b data-component-count>8</b> <span>componentes</span></div>
@@ -105,6 +103,7 @@
         </section>
 
         <section id="catalogo" aria-label="Catálogo">
+          <h2>Otros componentes</h2>
           <div id="catalog-grid" class="grid" aria-live="polite"></div>
           <div id="catalog-status" class="empty" hidden></div>
         </section>
