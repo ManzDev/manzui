@@ -1,5 +1,5 @@
 {
-  "Navegación": ["FileTree"],
+  "Navegación": ["FileTree", "TabContainer"],
   "Código": ["CommandViewer"],
   "Datos": ["ComparativeChart"],
   "Fechas": ["CountDown"],
