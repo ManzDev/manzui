@@ -1,0 +1,70 @@
+:host {
+  --offset: 16px;
+  --breadcrumb-gap: 0;
+  --breadcrumb-bg: #222;
+  --breadcrumb-hover-bg: #333;
+  --breadcrumb-current-bg: #555;
+  --breadcrumb-link-color: #ccc;
+  --breadcrumb-link-hover-color: #eee;
+  --breadcrumb-current-color: #ccc;
+  --breadcrumb-separator-color: #555;
+  --breadcrumb-font-size: 1rem;
+
+  display: block;
+  font-family: "Victor Mono", monospace;
+  font-size: var(--breadcrumb-font-size, 1rem);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--breadcrumb-gap, 0.5rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: var(--breadcrumb-gap, 0.5rem);
+
+    a {
+      display: inline-block;
+      color: var(--breadcrumb-link-color, #ccc);
+      background: var(--breadcrumb-bg, #222);
+      padding: 4px 28px;
+      text-decoration: none;
+      white-space: nowrap;
+      clip-path: polygon(0 0, calc(100% - var(--offset)) 0, 100% 50%, calc(100% - var(--offset)) 100%, 0 100%, var(--offset) 50%);
+      transition: background 0.15s ease, color 0.15s ease;
+
+      &:hover {
+        color: var(--breadcrumb-link-hover-color, #eee);
+        background: var(--breadcrumb-hover-bg, #333);
+      }
+
+      &[aria-current="page"] {
+        color: var(--breadcrumb-current-color, #888);
+        background: var(--breadcrumb-current-bg, #111);
+        font-weight: 600;
+        pointer-events: none;
+      }
+    }
+
+    &:first-child a {
+      padding-left: 16px;
+      clip-path: polygon(0 0, calc(100% - var(--offset)) 0, 100% 50%, calc(100% - var(--offset)) 100%, 0 100%);
+    }
+
+    .separator {
+      color: var(--breadcrumb-separator-color, #555);
+      user-select: none;
+    }
+  }
+}
+
+.notice {
+  color: #888;
+  font-size: 0.95rem;
+}
