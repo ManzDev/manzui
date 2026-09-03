@@ -12,10 +12,12 @@ const TAG_MAP = {
   CountDown: "count-down",
   FileTree: "file-tree",
   ImageMaskCompare: "image-mask-compare",
+  ImagePins: "image-pins",
   ImageSliderCompare: "image-slider-compare",
   ImageValuesViewer: "image-values-viewer",
   InputOTP: "input-otp",
   TabContainer: "tab-container",
+  BreadCrumbs: "bread-crumbs",
 };
 
 // CDN base para el HTML mostrado / copiado / CodePen

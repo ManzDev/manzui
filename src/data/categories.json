@@ -1,8 +1,8 @@
 {
-  "Navegación": ["FileTree", "TabContainer"],
+  "Navegación": ["FileTree", "TabContainer", "BreadCrumbs"],
   "Código": ["CommandViewer"],
   "Datos": ["ComparativeChart"],
   "Fechas": ["CountDown"],
   "Formularios": ["InputOTP"],
-  "Imágenes": ["ImageMaskCompare", "ImageSliderCompare", "ImageValuesViewer"]
+  "Imágenes": ["ImageMaskCompare", "ImagePins", "ImageSliderCompare", "ImageValuesViewer"]
 }

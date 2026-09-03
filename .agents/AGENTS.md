@@ -1,5 +1,6 @@
 - Usamos `pnpm`, no `npm`.
 - No levantes servidores ni hagas builds, simplemente avisa, que lo hará el humano.
+- Revisa @public/components/FileTree.js para entender el patrón habitual de los componentes que vamos a desarrollar. Si lo necesitas mira algún otro más.
 
 ## CSS
 

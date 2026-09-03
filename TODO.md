@@ -7,14 +7,15 @@
 - [X] Bar graphs - benchmarks
 - [X] Varios inputs para poner número de una contraseña (OTP)
 - [X] Sistema de tabs sencillo con HTML
+- [X] BreadCrumbs
+- [X] Imagen con hotspots (tooltips o popover sobre una imagen)
 
-- [ ] BreadCrumbs
-- [ ] Imagen con hotspots (tooltips o popover sobre una imagen)
-
-- [ ] Widget de repo de GitHub
-- [ ] Componente de Spoiler
+- [ ] Widget de repo de GitHub     <github-repo url="manzdev/manzui"></github-repo>
+- [ ] Componente de Spoiler        <spoiler-content>Hola, el asesino es ...</spoiler-content>
+    - Si contiene imagen, aplicar blur
 
 - [ ] ColorPicker (soporte hex, otros esquemas de colores...)
+
 
 # Pendientes (por revisar o analizar)
 
@@ -57,6 +58,7 @@
 - [ ] Calendario (avanzado, de los últimos)
 - [ ] Datatable (avanzado, de los últimos)
 - [ ] Planner (fases, goals, feedback)
+- [ ] Highlight de código minimalista (usando Range + Highlight API) → Prism, Highlight
 
 
 # Descartados

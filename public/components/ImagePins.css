@@ -1,0 +1,162 @@
+:host {
+  display: inline-block;
+  max-width: 600px;
+  --image-pins-tooltip-bg: #0c0c0c;
+  --image-pins-tooltip-color: #eee;
+}
+
+.container {
+  position: relative;
+  line-height: 0;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.pin {
+  position: absolute;
+  translate: -50% -50%;
+  line-height: normal;
+  z-index: 1;
+
+  .pin-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    --pulse-color: var(--image-pins-pulse-color, color-mix(in srgb, var(--pin-color, #ffd54a) 35%, white));
+
+    &:focus-visible {
+      outline: 2px solid #fff;
+      outline-offset: 2px;
+      border-radius: 50%;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--pin-color, #ffd54a);
+      outline: 2px solid #fff;
+      box-shadow: 0 1px 6px #000a;
+      transition: transform 0.15s ease;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid var(--pulse-color);
+      animation: pin-ping 2.4s ease-out infinite;
+      pointer-events: none;
+    }
+
+    &:hover .dot {
+      transform: scale(1.25);
+    }
+  }
+
+  &:hover .pin-btn::after,
+  &:focus-within .pin-btn::after,
+  &.open .pin-btn::after {
+    animation-play-state: paused;
+    opacity: 0;
+  }
+
+  .tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    translate: -50% 0;
+    min-width: 120px;
+    max-width: 220px;
+    box-sizing: border-box;
+    padding: 8px 10px;
+    background: var(--image-pins-tooltip-bg);
+    color: var(--image-pins-tooltip-color);
+    border: 1px solid #2a2a2a;
+    box-shadow: 4px 4px #0009;
+    font-family: "Victor Mono", monospace;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 2;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      translate: -50% 0;
+      border: 6px solid transparent;
+      border-top-color: var(--image-pins-tooltip-bg);
+    }
+  }
+
+  &[data-pos="below"] .tooltip {
+    bottom: auto;
+    top: calc(100% + 10px);
+
+    &::after {
+      top: auto;
+      bottom: 100%;
+      border-top-color: transparent;
+      border-bottom-color: var(--image-pins-tooltip-bg);
+    }
+  }
+
+  &:hover .tooltip,
+  &:focus-within .tooltip,
+  &.open .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &.open {
+    z-index: 3;
+  }
+}
+
+@keyframes pin-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pin .pin-btn::after {
+    animation: none;
+  }
+}
+
+.notice {
+  padding: 20px;
+  color: #c33;
+  font-family: "Victor Mono", monospace;
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.5;
+}
