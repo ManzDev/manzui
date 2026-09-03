@@ -124,6 +124,22 @@
   &.open .tooltip {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+  }
+
+  .tooltip a {
+    color: cyan;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover {
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid cyan;
+      outline-offset: 2px;
+    }
   }
 
   &.open {

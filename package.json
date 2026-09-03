@@ -18,9 +18,9 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node .bin/build-lib.js",
     "build:lib": "node .bin/build-lib.js",
-    "build:all": "vite build && node .bin/build-lib.js",
+    "build:web": "vite build",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
     "bump": "pnpm version patch -m \"chore: bump to %s\"",

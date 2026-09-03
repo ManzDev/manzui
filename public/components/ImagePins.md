@@ -6,8 +6,7 @@ description: Imagen con puntos de interés clicables que muestran un tooltip con
 <script type="module" src="/components/ImagePins.js"></script>
 
 <image-pins src="https://manzdev.github.io/manzui/manz.png" alt="Manz">
-  <info-pin x="40%" y="50%" color="indigo">Texto del <em>tooltip</em></info-pin>
-  <info-pin x="20%" y="80%" color="red">Texto del tooltip</info-pin>
-  <info-pin x="90%" y="10%" color="#847212">Texto del tooltip</info-pin>
-  <info-pin x="10%" y="10%" color="green">Un texto un poco más largo para ver si esto funciona correctamente.</info-pin>
+  <info-pin x="55%" y="35%" color="indigo">Te está <em>escuchando</em></info-pin>
+  <info-pin x="75%" y="60%" color="red">Para protegerse del frío</info-pin>
+  <info-pin x="33%" y="35%" color="cyan">Supervisión de <a href="https://manz.dev/">ManzDev</a>.</info-pin>
 </image-pins>

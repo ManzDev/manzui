@@ -117,6 +117,8 @@ class ImagePins extends HTMLElement {
   }
 
   #onClick = (e) => {
+    // Click dentro del tooltip (p. ej. un enlace): dejar actuar por defecto sin cerrar
+    if (e.target.closest?.(".tooltip")) return;
     const btn = e.target.closest(".pin-btn");
     if (!btn || !this.#shadow.contains(btn)) {
       this.#closeAll();
