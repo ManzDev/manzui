@@ -15,6 +15,7 @@ const TAG_MAP = {
   ImageSliderCompare: "image-slider-compare",
   ImageValuesViewer: "image-values-viewer",
   InputOTP: "input-otp",
+  TabContainer: "tab-container",
 };
 
 // CDN base para el HTML mostrado / copiado / CodePen

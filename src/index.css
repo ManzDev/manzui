@@ -546,7 +546,9 @@
     .detail-header p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.88rem; max-width: 70ch; }
     .detail-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
     .detail-body { padding: 1rem; display: grid; gap: 1rem; }
-    .detail-stage { background: #151520; border-radius: 12px; padding: 0.8rem; border: 1px solid var(--border); min-height: 80px; }
+    .detail-stage { 
+      padding: 0.8rem; 
+      min-height: 80px; }
     .code-details {
       border: none;
       background: transparent;
