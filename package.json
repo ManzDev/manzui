@@ -1,6 +1,6 @@
 {
   "name": "manzui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Vanilla WebComponents UI Library",
   "main": "./dist/lib/manzui.js",
   "module": "./dist/lib/manzui.js",
