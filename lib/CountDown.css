@@ -1,0 +1,159 @@
+.flip-clock {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #9aa0a6;
+  text-transform: uppercase;
+}
+
+.digits {
+  display: flex;
+  gap: 4px;
+}
+
+.digit {
+  --w: 40px;
+  --h: 60px;
+  --r: 6px;
+
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  perspective: 300px;
+  font-size: calc(var(--h) * 0.7);
+  font-weight: 700;
+  line-height: var(--h);
+  border-radius: var(--r);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+}
+
+.digit .top,
+.digit .bottom,
+.digit .flip-top,
+.digit .flip-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+}
+
+.digit .top,
+.digit .flip-top {
+  top: 0;
+  border-radius: var(--r) var(--r) 0 0;
+  background: linear-gradient(#2a2e33, #1c1f24);
+}
+
+.digit .bottom,
+.digit .flip-bottom {
+  bottom: 0;
+  border-radius: 0 0 var(--r) var(--r);
+  background: linear-gradient(#1c1f24, #15181c);
+}
+
+.digit .top span,
+.digit .bottom span,
+.digit .flip-top span,
+.digit .flip-bottom span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--h);
+  line-height: var(--h);
+  text-align: center;
+  color: #f5f5f5;
+  font-variant-numeric: tabular-nums;
+}
+
+.digit .top span,
+.digit .flip-top span {
+  top: 0;
+}
+
+.digit .bottom span,
+.digit .flip-bottom span {
+  bottom: 0;
+}
+
+/* Línea divisoria central */
+.digit::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 1px);
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 5;
+}
+
+/* Solapas (flaps) que producen el efecto de giro */
+.digit .flip-top {
+  transform-origin: bottom;
+  z-index: 2;
+  backface-visibility: hidden;
+}
+
+.digit .flip-bottom {
+  transform-origin: top;
+  transform: rotateX(90deg);
+  z-index: 2;
+  backface-visibility: hidden;
+}
+
+.digit.flip .flip-top {
+  animation: flip-top 0.6s ease-in both;
+}
+
+.digit.flip .flip-bottom {
+  animation: flip-bottom 0.6s ease-in both;
+}
+
+/* La solapa superior (con el dígito viejo) cae hacia delante y revela el nuevo */
+@keyframes flip-top {
+  0% { transform: rotateX(0deg); }
+  50% { transform: rotateX(-90deg); }
+  100% { transform: rotateX(-90deg); }
+}
+
+/* La solapa inferior (con el dígito nuevo) cae desde atrás hasta su sitio */
+@keyframes flip-bottom {
+  0% { transform: rotateX(90deg); }
+  50% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+@media (max-width: 520px) {
+  .digit {
+    --w: 30px;
+    --h: 46px;
+  }
+  .flip-clock {
+    gap: 5px;
+  }
+  .label {
+    font-size: 8px;
+  }
+}
+
+.expired {
+  font-size: 16px;
+  font-weight: 600;
+  color: #9aa0a6;
+  text-align: center;
+}

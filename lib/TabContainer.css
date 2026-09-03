@@ -1,0 +1,89 @@
+:host {
+  --tab-gap: 0;
+  --tab-border: #2a2a2a;
+  --tab-bg: color-mix(in srgb, var(--tab-border, #2a2a2a), black 40%);
+  --tab-color: color-mix(in srgb, var(--tab-border, #2a2a2a), white 55%);
+  --tab-hover-bg: color-mix(in srgb, var(--tab-border, #2a2a2a), black 25%);
+  --tab-active-bg: color-mix(in srgb, var(--tab-border, #2a2a2a) 88%, white);
+  --tab-active-color: color-mix(in srgb, var(--tab-border, #2a2a2a) 16%, white);
+  --tab-disabled-color: color-mix(in srgb, var(--tab-color, #9f9f9f) 45%, transparent);
+  --tab-disabled-bg: color-mix(in srgb, var(--tab-bg, #191919) 35%, transparent);
+  --tab-disabled-border: color-mix(in srgb, var(--tab-border, #2a2a2a) 45%, transparent);
+  --tab-focus: #0c8c0c;
+  --tab-padding: 0.55rem 1rem;
+  --tab-panel-padding: 1rem 1.25rem;
+  --tab-panel-bg: #111;
+  --tab-panel-border: #2a2a2a;
+
+  display: block;
+}
+
+.tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tab-gap, 0);
+}
+
+/* NOTA: sin nesting con & dentro de ::slotted(). Cualquier selector detrás del
+   paréntesis (::slotted(button):hover, ::slotted(button)[...]) no casa en el
+   navegador y la regla se pierde sin avisar: cada variante va en su propia
+   regla con el selector DENTRO de ::slotted(). */
+::slotted(button) {
+  appearance: none;
+  font: inherit;
+  cursor: pointer;
+  padding: var(--tab-padding, 0.55rem 1rem);
+  color: var(--tab-color, color-mix(in srgb, #2a2a2a, white 55%));
+  background: var(--tab-bg, color-mix(in srgb, #2a2a2a, black 40%));
+  border: 1px solid var(--tab-bg, color-mix(in srgb, #2a2a2a, black 40%));
+  border-radius: 0;
+  margin-left: -1px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+::slotted(button:hover) {
+  background: var(--tab-hover-bg, color-mix(in srgb, #2a2a2a, black 25%));
+}
+
+::slotted(button:focus-visible) {
+  outline: 2px solid var(--tab-focus, #0c8c0c);
+  outline-offset: 2px;
+}
+
+::slotted(button[aria-selected="true"]) {
+  position: relative;
+  z-index: 1;
+  color: var(--tab-active-color, color-mix(in srgb, #2a2a2a 16%, white));
+  background: var(--tab-active-bg, color-mix(in srgb, #2a2a2a 88%, white));
+  border-color: var(--tab-active-bg, color-mix(in srgb, #2a2a2a 88%, white));
+  font-weight: 600;
+}
+
+::slotted(button:disabled) {
+  color: var(--tab-disabled-color, color-mix(in srgb, #9f9f9f 45%, transparent));
+  background: var(--tab-disabled-bg, color-mix(in srgb, #191919 35%, transparent));
+  border-color: var(--tab-disabled-border, color-mix(in srgb, #2a2a2a 45%, transparent));
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+/* El :first-child estructural debe ir DENTRO de ::slotted(). Anidarlo con &
+   genera ::slotted(button):first-child, que se evalúa en el contexto del shadow
+   y nunca casa: la primera tab heredaba margin-left: -1px y quedaba 1px a la
+   izquierda del borde del panel */
+::slotted(button:first-child) {
+  margin-left: 0;
+}
+
+/* Paneles: viven en el Light DOM (fuera del shadow), esta misma hoja se
+   comparte a nivel document desde TabContainer.js para darles estructura base */
+[data-tab] {
+  padding: var(--tab-panel-padding, 1rem 1.25rem);
+  background: var(--tab-panel-bg, #111);
+  border: 1px solid var(--tab-panel-border, #2a2a2a);
+  margin-top: -1px;
+
+  &[hidden] {
+    display: none;
+  }
+}
