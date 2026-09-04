@@ -16,6 +16,7 @@ const TAG_MAP = {
   ImageSliderCompare: "image-slider-compare",
   ImageValuesViewer: "image-values-viewer",
   InputOTP: "input-otp",
+  InputKnob: "input-knob",
   TabContainer: "tab-container",
   BreadCrumbs: "bread-crumbs",
 };

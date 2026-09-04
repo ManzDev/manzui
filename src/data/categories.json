@@ -3,6 +3,6 @@
   "Código": ["CommandViewer"],
   "Datos": ["ComparativeChart"],
   "Fechas": ["CountDown"],
-  "Formularios": ["InputOTP"],
+  "Formularios": ["InputOTP", "InputKnob"],
   "Imágenes": ["ImageMaskCompare", "ImagePins", "ImageSliderCompare", "ImageValuesViewer"]
 }

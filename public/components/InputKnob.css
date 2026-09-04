@@ -1,0 +1,125 @@
+:host {
+  --knob-size: 128px;
+  --knob-color: #00f0ff;
+  --knob-track-color: #2a2a3f;
+  --knob-stroke-width: 9;
+  --knob-gap: calc(var(--knob-size) * 0.22);
+  --knob-face-bg: #13131f;
+  --knob-text-color: #e6e6ff;
+
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.knob {
+  position: relative;
+  width: var(--knob-size);
+  height: var(--knob-size);
+  border-radius: 50%;
+  background: var(--knob-face-bg);
+  cursor: ew-resize;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--knob-color) 55%, transparent);
+  }
+
+  svg {
+    position: relative;
+    z-index: 3;
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    .track {
+      fill: none;
+      stroke: var(--knob-track-color);
+      stroke-width: var(--knob-stroke-width);
+      stroke-linecap: butt;
+    }
+
+    .progress {
+      fill: none;
+      stroke: var(--knob-color);
+      stroke-width: var(--knob-stroke-width);
+      stroke-linecap: butt;
+      transition: stroke-dashoffset 0.18s ease;
+    }
+  }
+
+  &.dragging {
+    & svg .progress {
+      transition: none;
+    }
+
+    & .thumb-wrap {
+      transition: none;
+    }
+  }
+
+  .thumb-wrap {
+    position: absolute;
+    z-index: 4;
+    inset: 0;
+    pointer-events: none;
+    transition: transform 0.18s ease;
+
+    .thumb {
+      position: absolute;
+      left: 50%;
+      top: calc(var(--knob-size) * 0.025);
+      width: calc(var(--knob-size) * 0.11);
+      height: calc(var(--knob-size) * 0.11);
+      min-width: 10px;
+      min-height: 10px;
+      border-radius: 50%;
+      background: var(--knob-color);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--knob-color) 65%, transparent);
+      transform: translateX(-50%);
+    }
+  }
+
+  .face {
+    position: absolute;
+    inset: var(--knob-gap);
+    border-radius: 50%;
+    background: #08080f;
+    border: 1px solid #ffffff14;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+
+    .value {
+      color: var(--knob-text-color);
+      font-family: "Victor Mono", ui-monospace, monospace;
+      font-weight: 700;
+      font-size: calc(var(--knob-size) * 0.17);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      max-width: 90%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+:host([disabled]) {
+  & .knob {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .knob {
+    & svg .progress,
+    & .thumb-wrap {
+      transition: none;
+    }
+  }
+}
